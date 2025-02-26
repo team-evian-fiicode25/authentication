@@ -3,12 +3,12 @@ namespace Fiicode25Auth.Database.DBObjects;
 using System;
 using Abstract;
 
-public readonly struct Login : ITimestamped, IIdentified
+public struct Login : ITimestamped, IIdentified
 {
-    public string UserName {get; init;}
-    public string PasswordHash {get; init;}
+    public string UserName {get; set;}
+    public string PasswordHash {get; set;}
 
-    public Guid Id {get; init;}
-    public DateTime CreatedAt {get; init;}
-    public DateTime UpdatedAt {get; init;}
+    public Guid Id {get; set;}
+    public DateTime CreatedAt {get; set;}
+    public DateTime UpdatedAt {get; set;}
 }
