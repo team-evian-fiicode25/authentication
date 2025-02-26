@@ -6,5 +6,5 @@ public interface IRepository<T> where T : struct, IIdentified, ITimestamped
 {
     T? ById(Guid id);
     IEnumerable<T> All();
-    void Commit(T obj);
+    T Commit(T obj);
 }

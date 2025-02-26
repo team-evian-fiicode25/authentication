@@ -15,7 +15,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentifie
     public T? ById(Guid id)
         => _store.FirstOrDefault(el => el.Id == id);
 
-    public void Commit(T obj)
+    public T Commit(T obj)
     {
         obj=_sanitizeObject(obj);
 
@@ -24,7 +24,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentifie
         if (idx == -1)
         {
             _store.Add(obj);
-            return;
+            return obj;
         }
 
         // Remove old item at O(1)
@@ -33,6 +33,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentifie
         _store.RemoveAt(_store.Count-1);
 
         _store.Add(obj);
+        return obj;
     }
 
     private T _sanitizeObject(T obj)

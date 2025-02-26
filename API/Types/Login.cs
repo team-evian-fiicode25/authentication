@@ -4,7 +4,7 @@ namespace Fiicode25Auth.API.Types;
 
 public class Login : ILogin
 {
-
+    public Guid Id {get; private set;}
     public string Username {get; private set;}
     public string PasswordHash {get; private set;}
 
@@ -20,12 +20,14 @@ public class Login : ILogin
 
     public Login(Database.DBObjects.Login login)
     {
+        Id=login.Id;
         Username=login.UserName;
         PasswordHash=login.PasswordHash;
     }
 
     private Login(string username, string password)
     {
+        Id=Guid.Empty;
         Username=username;
         PasswordHash=""; // Suppress CS8618 warning
         SetPassword(password);
@@ -38,6 +40,7 @@ public class Login : ILogin
     public static implicit operator Database.DBObjects.Login(Login login) 
         => new Database.DBObjects.Login()
              {
+                 Id=login.Id,
                  UserName=login.Username,
                  PasswordHash=login.PasswordHash
              };
