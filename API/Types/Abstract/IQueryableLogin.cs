@@ -1,5 +1,8 @@
 namespace Fiicode25Auth.API.Types.Abstract;
 
+/// <summary>
+///     Query interface for the GraphQL API
+/// </summary>
 public interface IQueryableLogin
 {
     string Id {get;}

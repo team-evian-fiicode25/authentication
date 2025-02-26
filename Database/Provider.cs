@@ -3,9 +3,19 @@ using Fiicode25Auth.Database.DBs.Abstract;
 
 namespace Fiicode25Auth.Database;
 
+/// <summary>
+///     Collection of relevant abstract factories used in the project
+/// </summary>
 public static class Provider
 {
-    private static IDatabase? _db=null;
+    /// <value>
+    ///     An object that interfaces with the database
+    /// </value>
+    /// <remarks>
+    ///     This SHOULD be used on a transaction level as
+    ///     the implementation is responsible for managing
+    ///     the lifetime of each instance
+    /// </remarks>
     public static IDatabase Database 
     {
         get
@@ -18,4 +28,5 @@ public static class Provider
             return _db = new InMemoryDatabase();
         }
     } 
+    private static IDatabase? _db=null;
 }
