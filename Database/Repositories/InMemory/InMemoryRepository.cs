@@ -12,10 +12,10 @@ public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentifie
         return _store.AsReadOnly();
     }
 
-    public T? ById(Guid id)
+    public async Task<T?> ById(Guid id)
         => _store.FirstOrDefault(el => el.Id == id);
 
-    public T Commit(T obj)
+    public virtual async Task<T> Commit(T obj)
     {
         obj=_sanitizeObject(obj);
 

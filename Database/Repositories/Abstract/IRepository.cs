@@ -9,7 +9,7 @@ public interface IRepository<T> where T : struct, IIdentified, ITimestamped
 {
     /// <summary>Gets an item by its Id</summary>
     /// <remarks>If no item with the <c>id</c> exists, returns null</remarks>
-    T? ById(Guid id);
+    Task<T?> ById(Guid id);
 
     IEnumerable<T> All();
 
@@ -28,5 +28,5 @@ public interface IRepository<T> where T : struct, IIdentified, ITimestamped
     /// </para>
     /// </remarks>
     /// <returns>The created/updated item</returns> 
-    T Commit(T obj);
+    Task<T> Commit(T obj);
 }

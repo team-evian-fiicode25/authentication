@@ -6,9 +6,9 @@ namespace Fiicode25Auth.API;
 
 public class Mutation 
 {
-    public IQueryableLogin CreateLogin(string username, string password, IDatabaseProvider dbProvider)
+    public async Task<IQueryableLogin> CreateLogin(string username, string password, IDatabaseProvider dbProvider)
     {
         var login = Login.FromCredentials(username, password);
-        return (QueryableLogin)dbProvider.Database.Logins.Commit(login);
+        return (QueryableLogin) await dbProvider.Database.Logins.Commit(login);
     }
 }
