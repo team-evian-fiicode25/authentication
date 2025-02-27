@@ -1,5 +1,6 @@
 using Fiicode25Auth.API.Configuration;
 using Fiicode25Auth.API.Configuration.Abstract;
+using Fiicode25Auth.API.GraphQL;
 using Fiicode25Auth.API.Types;
 using Fiicode25Auth.Database.DBs;
 using Fiicode25Auth.Database.DBs.Abstract;
@@ -25,6 +26,7 @@ builder
             .AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()
+            .AddErrorFilter<DatabaseExceptionFilter>()
             .AddType<ObjectType<QueryableLogin>>());
 
 var dbConfig = config.DatabaseConfig;
