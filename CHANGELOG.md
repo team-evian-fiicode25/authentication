@@ -8,3 +8,6 @@ Boilerplate-full proof of concept implementation featuring:
 
 # v0.2.0-test1
 This is a test for the automatic publishing to the Docker registry
+
+# v0.2.0
+* Added automatic publishing to the Docker registry
