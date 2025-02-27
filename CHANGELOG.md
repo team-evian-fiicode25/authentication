@@ -6,3 +6,5 @@ Boilerplate-full proof of concept implementation featuring:
 - Minimal types for querying and modifying the login collection
     - this includes hashing of passwords
 
+# v0.2.0-test1
+This is a test for the automatic publishing to the Docker registry
