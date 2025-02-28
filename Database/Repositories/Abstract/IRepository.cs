@@ -13,6 +13,13 @@ public interface IRepository<T> where T : struct, IIdentified, ITimestamped
 
     IEnumerable<T> All();
 
+    /// <summary>Removes the item with the id <c>id</c></summary>
+    /// <returns>
+    ///     The removed item, or null, if no item 
+    ///     was found to match the provided id
+    /// </returns>
+    Task<T?> Remove(Guid id);
+
     /// <summary>Commits <c>obj</c> to the collection</summary>
     /// <remarks>
     /// <para>

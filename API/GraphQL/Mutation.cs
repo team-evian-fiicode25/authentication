@@ -37,4 +37,24 @@ public class Mutation
 
         return qLoginProvider.FromDBO(loginDBO);
     }
+
+    public async Task<IQueryableLogin?> RemoveLogin(string id,
+                                                    IDatabaseProvider dbProvider,
+                                                    IQueryableLoginProvider qLoginProvider)
+    {
+        try 
+        {
+            var dbo = await dbProvider.Database.Logins.Remove(Guid.Parse(id));
+            if(!dbo.HasValue)
+                return null;
+
+            return qLoginProvider.FromDBO(dbo.Value);
+        }
+        catch (System.FormatException)
+        {
+            throw new IdFormatEception();
+        }
+
+           
+    }
 }
