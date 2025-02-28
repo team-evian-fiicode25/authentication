@@ -11,10 +11,13 @@ public class InMemoryLoginRepository : InMemoryRepository<Login>, ILoginReposito
 
     public async override Task<Login> Commit(Login obj)
     {
-        var login = await ByUsername(obj.UserName);
-        if(login != null && login?.Id != obj.Id)
+        if(obj.UserName != null) 
         {
-            throw new DuplicateUsernameException();
+            var login = await ByUsername(obj.UserName);
+            if(login != null && login?.Id != obj.Id)
+            {
+                throw new DuplicateUsernameException();
+            }
         }
 
         return await base.Commit(obj);

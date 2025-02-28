@@ -1,4 +1,4 @@
-namespace Fiicode25Auth.API.Types.Abstract;
+namespace Fiicode25Auth.API.Types.Helper.Abstract;
 
 /// <summary>
 ///     High level representation of an account <br/>
@@ -14,11 +14,8 @@ public interface ILogin
     ///     throw-away temporary representation of a login
     /// </remarks>
     Guid? Id {get;} 
-    string Username {get;}
-    string PasswordHash {get;}
-
-    string SetPassword(string password);
-
-    /// <returns>true if <c>password</c> mathches the stored hash and false otherwise</returns>
-    bool VerifyPassword(string password);
+    string? Username {get; set;}
+    IPassword Password {get; set;}
+    IPhoneNumber? PhoneNumber {get; set;}
+    IEmail? Email {get; set;}
 }
