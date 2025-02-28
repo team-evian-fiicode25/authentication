@@ -7,7 +7,7 @@ public class Email : IEmail
     // TODO: Add regex validation for the address
     public string Address {get; private set;}
 
-    public bool IsVerified => VerifyToken != null;
+    public bool IsVerified => VerifyToken == null;
 
     public string? VerifyToken {get; private set;}
 

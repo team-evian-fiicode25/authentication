@@ -6,7 +6,7 @@ public class PhoneNumber : IPhoneNumber
 {
     public string Number {get; private set;}
 
-    public bool IsVerified => VerifyCode != null;
+    public bool IsVerified => VerifyCode == null;
     public string? VerifyCode {get; private set;}
 
     public PhoneNumber(string phoneNumber)
