@@ -13,10 +13,10 @@ This is a test for the automatic publishing to the Docker registry
 * Added automatic publishing to the Docker registry
 
 # v0.3.0
-Functionally:
-    - Added minimal support for phone numbers and email addresses
-    - Added errors for missing arguments, duplicate fields
-    - Added support for configuring required fields 
+#### Functionally:
+- Added minimal support for phone numbers and email addresses
+- Added errors for missing arguments, duplicate fields
+- Added support for configuring required fields 
 
 Also refactored all API layer classes to use composition and
 allow for easy DI. This will permit to conditionally DI some
