@@ -16,6 +16,21 @@ public class ApplicationConfiguration : IApplicationConfiguration
         return new InMemoryDatabaseConfiguration();
     }}
 
+    public Fields MandatoryFields { get 
+    {
+        var fields = Fields.None;
+
+        if (_config["MandatoryFields:Username"] == "1")
+            fields |= Fields.Username;
+
+        if (_config["MandatoryFields:PhoneNumber"] == "1")
+            fields |= Fields.Phone;
+
+        if (_config["MandatoryFields:Email"] == "1")
+            fields |= Fields.Email;
+
+        return fields;
+    }}
 
     public ApplicationConfiguration(IConfiguration config) {_config=config;}
     private IConfiguration _config;
