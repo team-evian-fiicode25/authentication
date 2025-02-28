@@ -31,6 +31,7 @@ builder
             .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
             .AddScoped<IPasswordProvider, PasswordProvider>()
             .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
+            .AddScoped<AllLoginProviders>()
             .AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()

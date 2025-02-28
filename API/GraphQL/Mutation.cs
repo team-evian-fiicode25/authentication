@@ -1,5 +1,5 @@
 using Fiicode25Auth.API.Configuration.Abstract;
-using Fiicode25Auth.API.Types.Helper.Abstract;
+using Fiicode25Auth.API.Types.Helper;
 using Fiicode25Auth.API.Types.Queryable.Abstract;
 using Fiicode25Auth.Database.DBs.Abstract;
 
@@ -12,29 +12,27 @@ public class Mutation
                                                    string? phoneNumber,
                                                    string password,
                                                    IDatabaseProvider dbProvider,
-                                                   ILoginProvider loginProvider,
-                                                   IEmailProvider emailProvider,
-                                                   IPhoneNumberProvider phoneProvider,
+                                                   AllLoginProviders loginProviders,
                                                    IQueryableLoginProvider qLoginProvider,
                                                    IApplicationConfiguration config)
     {
-        var login = loginProvider.NewWithPassword(password);
+        var login = loginProviders.Login.NewWithPassword(password);
 
         if (username == null && config.MandatoryFields.HasFlag(Fields.Username))
             throw new GraphQLException("Missing required argument: User");
         login.Username = username;
 
         if (email != null)
-            login.Email = emailProvider.NewFromAddress(email);
+            login.Email = loginProviders.Email.NewFromAddress(email);
         else if (config.MandatoryFields.HasFlag(Fields.Email))
             throw new GraphQLException("Missing required argument: Email");
 
         if (phoneNumber != null)
-            login.PhoneNumber = phoneProvider.New(phoneNumber);
+            login.PhoneNumber = loginProviders.Phone.New(phoneNumber);
         else if (config.MandatoryFields.HasFlag(Fields.Phone))
             throw new GraphQLException("Missing required argument: Phone");
 
-        var loginDBO = await dbProvider.Database.Logins.Commit(loginProvider.ToDBO(login));
+        var loginDBO = await dbProvider.Database.Logins.Commit(loginProviders.Login.ToDBO(login));
 
         return qLoginProvider.FromDBO(loginDBO);
     }
