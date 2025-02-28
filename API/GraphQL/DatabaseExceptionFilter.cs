@@ -17,11 +17,6 @@ public class DatabaseExceptionFilter : IErrorFilter
                 .WithMessage("Failed unique constraint on the username field");
         }
 
-
-        if (error.Exception != null)
-        {
-            Console.Error.WriteLine(error.Exception.ToString());
-        }
         return error;
     }
 }

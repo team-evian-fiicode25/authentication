@@ -35,7 +35,9 @@ builder
             .AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()
+            .AddErrorFilter<ExposeExceptionsFilter>()
             .AddErrorFilter<DatabaseExceptionFilter>()
+            .AddErrorFilter<ErrorLoggingFilter>()
             .AddType<ObjectType<QueryableLogin>>()
             .AddType<ObjectType<QueryableEmail>>()
             .AddType<ObjectType<QueryablePhoneNumber>>());
