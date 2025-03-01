@@ -1,6 +1,6 @@
 using Fiicode25Auth.Database.Exceptions;
 
-namespace Fiicode25Auth.API.GraphQL;
+namespace Fiicode25Auth.API.GraphQL.Filters;
 
 /// <summary>
 ///     Filter to expose some exceptions thrown in the database layer

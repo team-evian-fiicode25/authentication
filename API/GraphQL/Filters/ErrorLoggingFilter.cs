@@ -1,4 +1,4 @@
-namespace Fiicode25Auth.API.GraphQL;
+namespace Fiicode25Auth.API.GraphQL.Filters;
 
 /// <summary>
 ///     Filter to log unexpected exceptions to stderr

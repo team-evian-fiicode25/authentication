@@ -1,6 +1,7 @@
 using Fiicode25Auth.API.Configuration;
 using Fiicode25Auth.API.Configuration.Abstract;
 using Fiicode25Auth.API.GraphQL;
+using Fiicode25Auth.API.GraphQL.Filters;
 using Fiicode25Auth.API.Types.Helper.Login;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 using Fiicode25Auth.API.Types.Helper.LoginSession;

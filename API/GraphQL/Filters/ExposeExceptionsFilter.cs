@@ -1,6 +1,6 @@
 using Fiicode25Auth.API.Exceptions;
 
-namespace Fiicode25Auth.API.GraphQL;
+namespace Fiicode25Auth.API.GraphQL.Filters;
 
 /// <summary>
 ///     Filter to expose messages of intended
