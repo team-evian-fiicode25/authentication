@@ -1,7 +1,10 @@
 using Fiicode25Auth.API.Configuration.Abstract;
 using Fiicode25Auth.API.Exceptions;
-using Fiicode25Auth.API.Types.Helper;
-using Fiicode25Auth.API.Types.Queryable.Abstract;
+using Fiicode25Auth.API.Types.Helper.Login;
+using Fiicode25Auth.API.Types.Helper.Login.Abstract;
+using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
+using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
+using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
 using Fiicode25Auth.Database.DBs.Abstract;
 
 namespace Fiicode25Auth.API.GraphQL;
@@ -54,7 +57,33 @@ public class Mutation
         {
             throw new IdFormatEception();
         }
+    }
 
-           
+    public async Task<IQueryableLoginSession> LogInWithPassword(string username,
+                                                         string password,
+                                                         IDatabaseProvider dbProvider,
+                                                         ILoginProvider loginProvider,
+                                                         ILoginSessionProvider loginSessionProvider,
+                                                         IQueryableLoginSessionProvider qLoginSessionProvider)
+    {
+        var loginDBO = await dbProvider.Database.Logins.ByUsername(username);
+        if (loginDBO == null)
+            throw new GraphQLException("Wrong credentials");
+
+        var login = loginProvider.FromDBO(loginDBO.Value);
+
+        if (!login.Password.Verify(password))
+            throw new GraphQLException("Wrong credentials");
+
+        var loginSession = loginSessionProvider.New(login);
+
+        var loginSessionToken
+            = (await dbProvider.Database.LoginSessions.Commit(
+                    loginSessionProvider.ToDBO(loginSession)
+                )).SecureIdentifier;
+
+        var loginSessionDBO = await dbProvider.Database.LoginSessions.Get(loginSessionToken);
+
+        return qLoginSessionProvider.FromDBO(loginSessionDBO);
     }
 }

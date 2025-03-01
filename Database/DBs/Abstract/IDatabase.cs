@@ -9,4 +9,5 @@ namespace Fiicode25Auth.Database.DBs.Abstract;
 public interface IDatabase
 {
     ILoginRepository Logins {get;}
+    ILoginSessionRepository LoginSessions {get;}
 }

@@ -7,7 +7,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentifie
 {
     protected List<T> _store=new List<T>();
 
-    public IEnumerable<T> All()
+    public virtual IEnumerable<T> All()
     {
         return _store.AsReadOnly();
     }
