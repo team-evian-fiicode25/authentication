@@ -3,7 +3,7 @@ namespace Fiicode25Auth.Database.DBObjects;
 using System;
 using Abstract;
 
-public struct Login : ITimestamped, IIdentified
+public class Login : ITimestamped, IIdentified
 {
     public string PasswordHash {get; set;}
 
@@ -16,7 +16,7 @@ public struct Login : ITimestamped, IIdentified
     public DateTime UpdatedAt {get; set;}
 }
 
-public struct Email
+public class Email
 {
     public string Address {get; set;}
 
@@ -31,7 +31,7 @@ public struct Email
     public string? VerifyToken {get; set;}
 }
 
-public struct PhoneNumber
+public class PhoneNumber
 {
     public string Number {get; set;}
 

@@ -3,7 +3,7 @@ using Fiicode25Auth.Database.Repositories.Abstract;
 
 namespace Fiicode25Auth.Database.Repositories.InMemory;
 
-public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentified, ITimestamped
+public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified, ITimestamped
 {
     protected List<T> _store=new List<T>();
 

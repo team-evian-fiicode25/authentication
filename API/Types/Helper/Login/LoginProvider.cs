@@ -10,10 +10,10 @@ public class LoginProvider : ILoginProvider
             id: login.Id,
             password: _passwordProvider.FromHash(login.PasswordHash));
 
-        l.Email = login.Email.HasValue ?
-            _emailProvider.FromDBO(login.Email.Value) : null;
-        l.PhoneNumber = login.PhoneNumber.HasValue ? 
-            _phoneNumberProvider.FromDBO(login.PhoneNumber.Value) : null;
+        l.Email = login.Email != null ?
+            _emailProvider.FromDBO(login.Email) : null;
+        l.PhoneNumber = login.PhoneNumber != null ? 
+            _phoneNumberProvider.FromDBO(login.PhoneNumber) : null;
         l.Username = login.UserName;
 
         return l;

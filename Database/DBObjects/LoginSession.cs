@@ -3,7 +3,7 @@ namespace Fiicode25Auth.Database.DBObjects;
 using System;
 using Abstract;
 
-public struct LoginSession : ITimestamped, IIdentified
+public class LoginSession : ITimestamped, IIdentified
 {
     public Guid LoginId {get; set;}
 
@@ -19,7 +19,7 @@ public struct LoginSession : ITimestamped, IIdentified
     public DateTime UpdatedAt {get; set;}
 }
 
-public struct LoginSessionWith2FAData
+public class LoginSessionWith2FAData
 {
     public LoginSession LoginSession {get; set;}
     public Email? Email {get; set;}

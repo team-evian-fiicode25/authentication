@@ -5,7 +5,7 @@ namespace Fiicode25Auth.Database.Repositories.Abstract;
 /// <summary>
 ///     Minimal API to manipulate a collection of <c>T</c>
 /// </summary>
-public interface IRepository<T> where T : struct, IIdentified, ITimestamped 
+public interface IRepository<T> where T : class, IIdentified, ITimestamped 
 {
     /// <summary>Gets an item by its Id</summary>
     /// <remarks>If no item with the <c>id</c> exists, returns null</remarks>

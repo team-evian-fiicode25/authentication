@@ -84,7 +84,7 @@ public class NOfMLoginSessionProvider : ILoginSessionProvider
 
         return _email2FAProvider
             .FromCode(
-                    _emailProvider.FromDBO(loginSession.Email.Value),
+                    _emailProvider.FromDBO(loginSession.Email),
                     loginSession.LoginSession.EmailToken);
     }
 
@@ -113,7 +113,7 @@ public class NOfMLoginSessionProvider : ILoginSessionProvider
 
         return _phone2FAProvider
             .FromCode(
-                    _phoneProvider.FromDBO(loginSession.PhoneNumber.Value),
+                    _phoneProvider.FromDBO(loginSession.PhoneNumber),
                     loginSession.LoginSession.SMSCode);
     }
 }

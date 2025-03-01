@@ -48,10 +48,10 @@ public class Mutation
         try 
         {
             var dbo = await dbProvider.Database.Logins.Remove(Guid.Parse(id));
-            if(!dbo.HasValue)
+            if(dbo == null)
                 return null;
 
-            return qLoginProvider.FromDBO(dbo.Value);
+            return qLoginProvider.FromDBO(dbo);
         }
         catch (System.FormatException)
         {
@@ -70,13 +70,14 @@ public class Mutation
         if (loginDBO == null)
             throw new GraphQLException("Wrong credentials");
 
-        var login = loginProvider.FromDBO(loginDBO.Value);
+        var login = loginProvider.FromDBO(loginDBO);
 
         if (!login.Password.Verify(password))
             throw new GraphQLException("Wrong credentials");
 
         var loginSession = loginSessionProvider.New(login);
 
+        // TODO: Update interface to return LoginSessionWith2FAData instead
         var loginSessionToken
             = (await dbProvider.Database.LoginSessions.Commit(
                     loginSessionProvider.ToDBO(loginSession)
@@ -84,6 +85,6 @@ public class Mutation
 
         var loginSessionDBO = await dbProvider.Database.LoginSessions.Get(loginSessionToken);
 
-        return qLoginSessionProvider.FromDBO(loginSessionDBO.Value);
+        return qLoginSessionProvider.FromDBO(loginSessionDBO);
     }
 }

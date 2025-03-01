@@ -18,13 +18,13 @@ public class InMemoryLoginSessionRepository : InMemoryRepository<LoginSession>, 
         var loginSession = filtered.First();
 
         var login = await _loginRepository.ById(loginSession.LoginId);
-        if (!login.HasValue)
+        if (login == null)
             throw new DanglingReferenceException("No Login found for the LoginSession");
 
         return new()
         {
-            Email=login.Value.Email,
-            PhoneNumber=login.Value.PhoneNumber,
+            Email=login.Email,
+            PhoneNumber=login.PhoneNumber,
             LoginSession=loginSession
         };
     }

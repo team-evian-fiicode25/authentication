@@ -52,7 +52,7 @@ public class QueryableLoginSession : IQueryableLoginSession
         if(loginDBO == null)
             throw new DanglingLoginSessionException();
 
-        return _qLoginProvider.FromDBO(loginDBO.Value);
+        return _qLoginProvider.FromDBO(loginDBO);
     }
 
 

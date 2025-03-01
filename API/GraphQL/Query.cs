@@ -19,7 +19,7 @@ public class Query
         if (dbo == null)
             return null;
 
-        return qLoginProvider.FromDBO(dbo.Value);
+        return qLoginProvider.FromDBO(dbo);
     }
 
     public async Task<IQueryableLoginSession?> GetLoginSession(string token,
@@ -30,6 +30,6 @@ public class Query
         if(dbo == null)
             return null;
 
-        return qLoginSessionProvider.FromDBO(dbo.Value);
+        return qLoginSessionProvider.FromDBO(dbo);
     }
 }
