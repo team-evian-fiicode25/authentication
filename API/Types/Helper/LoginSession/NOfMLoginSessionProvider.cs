@@ -59,61 +59,46 @@ public class NOfMLoginSessionProvider : ILoginSessionProvider
     private IEmailProvider _emailProvider;
     private IPhoneNumberProvider _phoneProvider;
 
-    private IEmail2FA? _getEmail2FA(ILogin login)
+    private IEmail2FA? _getEmail2FA(ILogin login) => _nullOnException(() =>
     {
-        try
-        {
-            if (login.Email != null)
-            {
-                return _email2FAProvider.New(login.Email);
-            }
-            return null;
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-    }
+        if (login.Email != null)
+            return _email2FAProvider.New(login.Email);
 
-    private IEmail2FA? _getEmail2FA(LoginSessionWith2FAData loginSession)
+        return null;
+    });
+
+    private IEmail2FA? _getEmail2FA(LoginSessionWith2FAData loginSession) => _nullOnException(() =>
     {
         if (loginSession.Email == null)
-        {
             return null;
-        }
 
         return _email2FAProvider
             .FromCode(
                     _emailProvider.FromDBO(loginSession.Email),
                     loginSession.LoginSession.EmailToken);
-    }
+    });
 
-    private IPhone2FA? _getPhone2FA(ILogin login)
+    private IPhone2FA? _getPhone2FA(ILogin login) => _nullOnException(() => 
     {
-        try
-        {
-            if (login.PhoneNumber != null)
-            {
-                return _phone2FAProvider.New(login.PhoneNumber);
-            }
+        if (login.PhoneNumber == null)
             return null;
-        }
-        catch (Exception)
-        {
-            return null;
-        }
-    }
 
-    private IPhone2FA? _getPhone2FA(LoginSessionWith2FAData loginSession)
+        return _phone2FAProvider.New(login.PhoneNumber);
+    });
+
+    private IPhone2FA? _getPhone2FA(LoginSessionWith2FAData loginSession) => _nullOnException(() =>
     {
         if (loginSession.PhoneNumber == null)
-        {
             return null;
-        }
 
         return _phone2FAProvider
             .FromCode(
                     _phoneProvider.FromDBO(loginSession.PhoneNumber),
                     loginSession.LoginSession.SMSCode);
+    });
+
+    private T? _nullOnException<T> (Func<T> f)
+    {
+        try { return f(); } catch { return default(T); }
     }
 }
