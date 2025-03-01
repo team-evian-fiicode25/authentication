@@ -1,3 +1,4 @@
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
 using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
 using Fiicode25Auth.Database.DBs.Abstract;
@@ -11,11 +12,15 @@ public class Query
         return new List<IQueryableLogin>(dbProvider.Database.Logins.All().Select(l => qLoginProvider.FromDBO(l)));
     }
 
-    public async Task<IQueryableLogin?> GetLogin(string username,
-                                    IDatabaseProvider dbProvider,
-                                    IQueryableLoginProvider qLoginProvider)
+    public async Task<IQueryableLogin?> GetLogin(string? id,
+                                                 string? username,
+                                                 string? email,
+                                                 string? phone,
+                                                 ILoginRetriever loginRetriever,
+                                                 IQueryableLoginProvider qLoginProvider)
     {
-        var dbo = await dbProvider.Database.Logins.ByUsername(username);
+        var dbo = await loginRetriever.GetByIdentifier(id, username, phone, email);
+
         if (dbo == null)
             return null;
 

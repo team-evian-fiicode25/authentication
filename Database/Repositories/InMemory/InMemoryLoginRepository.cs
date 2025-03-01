@@ -9,6 +9,12 @@ public class InMemoryLoginRepository : InMemoryRepository<Login>, ILoginReposito
     public async Task<Login?> ByUsername(string username)
         => _store.FirstOrDefault(l => l.UserName == username);
 
+    public async Task<Login?> ByPhoneNumber(string phoneNumber)
+        => _store.FirstOrDefault(l => l.PhoneNumber?.Number == phoneNumber);
+
+    public async Task<Login?> ByEmail(string email)
+        => _store.FirstOrDefault(l => l.Email?.Address == email);
+
     public async override Task<Login> Commit(Login obj)
     {
         if(obj.UserName != null) 

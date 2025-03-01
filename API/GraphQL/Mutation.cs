@@ -1,5 +1,6 @@
 using Fiicode25Auth.API.Configuration.Abstract;
 using Fiicode25Auth.API.Exceptions;
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Helper.Login;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
@@ -59,14 +60,18 @@ public class Mutation
         }
     }
 
-    public async Task<IQueryableLoginSession> LogInWithPassword(string username,
-                                                         string password,
-                                                         IDatabaseProvider dbProvider,
-                                                         ILoginProvider loginProvider,
-                                                         ILoginSessionProvider loginSessionProvider,
-                                                         IQueryableLoginSessionProvider qLoginSessionProvider)
+    public async Task<IQueryableLoginSession> LogInWithPassword(string? id,
+                                                                string? username,
+                                                                string? email,
+                                                                string? phone,
+                                                                string password,
+                                                                ILoginRetriever loginRetriever,
+                                                                IDatabaseProvider dbProvider,
+                                                                ILoginProvider loginProvider,
+                                                                ILoginSessionProvider loginSessionProvider,
+                                                                IQueryableLoginSessionProvider qLoginSessionProvider)
     {
-        var loginDBO = await dbProvider.Database.Logins.ByUsername(username);
+        var loginDBO = await loginRetriever.GetByIdentifier(id, username, phone, email);
         if (loginDBO == null)
             throw new GraphQLException("Wrong credentials");
 
