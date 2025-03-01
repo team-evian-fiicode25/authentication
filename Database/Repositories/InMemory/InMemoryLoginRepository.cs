@@ -1,4 +1,5 @@
 using Fiicode25Auth.Database.DBObjects;
+using Fiicode25Auth.Database.Exceptions;
 using Fiicode25Auth.Database.Repositories.Abstract;
 
 namespace Fiicode25Auth.Database.Repositories.InMemory;
@@ -10,10 +11,13 @@ public class InMemoryLoginRepository : InMemoryRepository<Login>, ILoginReposito
 
     public async override Task<Login> Commit(Login obj)
     {
-        var login = await ByUsername(obj.UserName);
-        if(login != null && login?.Id != obj.Id)
+        if(obj.UserName != null) 
         {
-            throw new ArgumentException("Duplicate username error");
+            var login = await ByUsername(obj.UserName);
+            if(login != null && login?.Id != obj.Id)
+            {
+                throw new DuplicateUsernameException();
+            }
         }
 
         return await base.Commit(obj);

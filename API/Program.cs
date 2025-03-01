@@ -1,6 +1,10 @@
 using Fiicode25Auth.API.Configuration;
 using Fiicode25Auth.API.Configuration.Abstract;
-using Fiicode25Auth.API.Types;
+using Fiicode25Auth.API.GraphQL;
+using Fiicode25Auth.API.Types.Helper;
+using Fiicode25Auth.API.Types.Helper.Abstract;
+using Fiicode25Auth.API.Types.Queryable;
+using Fiicode25Auth.API.Types.Queryable.Abstract;
 using Fiicode25Auth.Database.DBs;
 using Fiicode25Auth.Database.DBs.Abstract;
 using Microsoft.AspNetCore;
@@ -22,10 +26,21 @@ builder
     .ConfigureServices(services =>
         services
             .AddScoped<IApplicationConfiguration, ApplicationConfiguration>()
+            .AddScoped<ILoginProvider, LoginProvider>()
+            .AddScoped<IEmailProvider, EmailProvider>()
+            .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
+            .AddScoped<IPasswordProvider, PasswordProvider>()
+            .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
+            .AddScoped<AllLoginProviders>()
             .AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()
-            .AddType<ObjectType<QueryableLogin>>());
+            .AddErrorFilter<ExposeExceptionsFilter>()
+            .AddErrorFilter<DatabaseExceptionFilter>()
+            .AddErrorFilter<ErrorLoggingFilter>()
+            .AddType<ObjectType<QueryableLogin>>()
+            .AddType<ObjectType<QueryableEmail>>()
+            .AddType<ObjectType<QueryablePhoneNumber>>());
 
 var dbConfig = config.DatabaseConfig;
 if(dbConfig.GetType() == typeof(InMemoryDatabaseConfiguration))
