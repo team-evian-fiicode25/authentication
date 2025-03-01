@@ -55,7 +55,7 @@ public class Mutation
         }
         catch (System.FormatException)
         {
-            throw new IdFormatEception();
+            throw new IdFormatException();
         }
     }
 
