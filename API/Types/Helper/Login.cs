@@ -10,8 +10,9 @@ public class Login : ILogin
     public IPhoneNumber? PhoneNumber {get; set;}
     public IEmail? Email {get; set;}
 
-    public Login(IPassword password)
+    public Login(IPassword password, Guid? id = null)
     {
+        Id=id;
         Password=password;
     }
 }

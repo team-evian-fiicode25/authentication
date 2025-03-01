@@ -6,7 +6,9 @@ public class LoginProvider : ILoginProvider
 {
     public ILogin FromDBO(Database.DBObjects.Login login)
     {
-        var l = new Login(_passwordProvider.FromHash(login.PasswordHash));
+        var l = new Login(
+            id: login.Id,
+            password: _passwordProvider.FromHash(login.PasswordHash));
 
         l.Email = login.Email.HasValue ?
             _emailProvider.FromDBO(login.Email.Value) : null;
