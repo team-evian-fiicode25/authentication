@@ -7,7 +7,13 @@ namespace Fiicode25Auth.Database.Repositories.InMemory;
 public class InMemoryLoginRepository : InMemoryRepository<Login>, ILoginRepository
 {
     public async Task<Login?> ByUsername(string username)
-        => _store.FirstOrDefault(l => l.UserName == username);
+    {
+        var filtered = _store.Where(l => l.UserName == username);
+        if (filtered.Count() == 0)
+            return null;
+
+        return filtered.First();
+    }
 
     public async Task<Login?> ByPhoneNumber(string phoneNumber)
         => _store.FirstOrDefault(l => l.PhoneNumber?.Number == phoneNumber);
