@@ -5,6 +5,6 @@ public interface IEmail
     string Address {get;}
     bool IsVerified {get;}
 
-    /// <value>Vorification token to be sent in email</value>
+    /// <value>Verification token to be sent in email</value>
     string? VerifyToken {get;}
 }
