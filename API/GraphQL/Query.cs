@@ -1,4 +1,5 @@
 using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
+using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
 using Fiicode25Auth.Database.DBs.Abstract;
 
 namespace Fiicode25Auth.API.GraphQL;
@@ -19,5 +20,16 @@ public class Query
             return null;
 
         return qLoginProvider.FromDBO(dbo.Value);
+    }
+
+    public async Task<IQueryableLoginSession?> GetLoginSession(string token,
+                                                               IDatabaseProvider dbProvider,
+                                                               IQueryableLoginSessionProvider qLoginSessionProvider)
+    {
+        var dbo = await dbProvider.Database.LoginSessions.Get(token);
+        if(dbo == null)
+            return null;
+
+        return qLoginSessionProvider.FromDBO(dbo.Value);
     }
 }

@@ -84,6 +84,6 @@ public class Mutation
 
         var loginSessionDBO = await dbProvider.Database.LoginSessions.Get(loginSessionToken);
 
-        return qLoginSessionProvider.FromDBO(loginSessionDBO);
+        return qLoginSessionProvider.FromDBO(loginSessionDBO.Value);
     }
 }
