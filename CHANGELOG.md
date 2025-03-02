@@ -21,3 +21,22 @@ This is a test for the automatic publishing to the Docker registry
 Also refactored all API layer classes to use composition and
 allow for easy DI. This will permit to conditionally DI some
 different implementations depending on the app's configuration.
+
+# v0.4.0
+Functionalities:
+- Added authentication sessions
+- Added login sessions
+- Added option to query Logins by many other means other than id
+
+Fixes:
+- Fixed typo in docstring
+- Fixed issue when updating Logins (it no longer tries to
+create instead of update when commiting an existing object)
+- Fixed 2FA email/phone object being created with unverified 
+email/phone
+
+Refactors:
+- Refactorerd struct DBObject types into ref type classes
+- Refactored all logic in Query/Mutation object into separate
+service
+- Other small refactors
