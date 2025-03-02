@@ -45,6 +45,7 @@ builder.Services
         .AddScoped<IPhone2FAProvider, SolvedPhone2FAProvider>()
         .AddScoped<IQueryableLoginSessionProvider, QueryableLoginSessionProvider>()
         .AddScoped<ILoginSessionService, LoginSessionService>()
+        .AddScoped<ISecureTokenGenerator, SecureTokenGenerator>()
         .AddGraphQLServer()
         .AddQueryType<Query>()
         .AddMutationType<Mutation>()

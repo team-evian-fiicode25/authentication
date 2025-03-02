@@ -1,3 +1,4 @@
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 
 namespace Fiicode25Auth.API.Types.Helper.Login;
@@ -11,10 +12,10 @@ public class Email : IEmail
 
     public string? VerifyToken {get; private set;}
 
-    public Email(string address)
+    public Email(string address, ISecureTokenGenerator tokenGenerator)
     {
         Address=address;  
-        VerifyToken=_generateToken();
+        VerifyToken=tokenGenerator.Base64Url128Bytes();
     }
 
     public Email(string address, string? token)
@@ -23,14 +24,4 @@ public class Email : IEmail
         VerifyToken=token;
     }
 
-    private string _generateToken()
-    {
-        var random = new Random();
-        var token = new byte[128];
-        random.NextBytes(token);
-
-        char[] padding = { '=' };
-        return System.Convert.ToBase64String(token)
-        .TrimEnd(padding).Replace('+', '-').Replace('/', '_');
-    }
 }

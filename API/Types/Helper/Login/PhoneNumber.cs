@@ -1,3 +1,4 @@
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 
 namespace Fiicode25Auth.API.Types.Helper.Login;
@@ -9,10 +10,10 @@ public class PhoneNumber : IPhoneNumber
     public bool IsVerified => VerifyCode == null;
     public string? VerifyCode {get; private set;}
 
-    public PhoneNumber(string phoneNumber)
+    public PhoneNumber(string phoneNumber, ISecureTokenGenerator tokenGenerator)
     {
         Number=phoneNumber;
-        VerifyCode=_generateCode();
+        VerifyCode=tokenGenerator.RandomDigits6();
     }
 
     public PhoneNumber(string phoneNumber, string? verifyCode)
@@ -20,8 +21,5 @@ public class PhoneNumber : IPhoneNumber
         Number=phoneNumber;
         VerifyCode=verifyCode;
     }
-
-    private string _generateCode() 
-        => (new Random().NextInt64() % (int)Math.Pow(10, 6)).ToString();
 }
 

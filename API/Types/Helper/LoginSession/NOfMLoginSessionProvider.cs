@@ -1,3 +1,4 @@
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
 using Fiicode25Auth.Database.DBObjects;
@@ -19,7 +20,8 @@ public class NOfMLoginSessionProvider : ILoginSessionProvider
             loginId: login.Id.Value,
             expiresAt: DateTime.UtcNow + TimeSpan.FromMinutes(10),
             email: _getEmail2FA(login),
-            phone: _getPhone2FA(login));
+            phone: _getPhone2FA(login),
+            tokenGenerator: _tokenGenerator);
     }
 
     public ILoginSession FromDBO(LoginSessionWith2FAData loginSession)
@@ -29,7 +31,8 @@ public class NOfMLoginSessionProvider : ILoginSessionProvider
             expiresAt: loginSession.LoginSession.Expiration,
             loginId: loginSession.LoginSession.LoginId,
             phone: _getPhone2FA(loginSession),
-            email: _getEmail2FA(loginSession));
+            email: _getEmail2FA(loginSession),
+            tokenGenerator: _tokenGenerator);
 
 
 
@@ -43,21 +46,20 @@ public class NOfMLoginSessionProvider : ILoginSessionProvider
         Expiration=loginSession.ExpiresAt
     };
 
-    public NOfMLoginSessionProvider(IEmail2FAProvider email2FAProvider,
-                                    IPhone2FAProvider phone2FAProvider,
-                                    IPhoneNumberProvider phoneProvider,
-                                    IEmailProvider emailProvider)
+    public NOfMLoginSessionProvider(IEmail2FAProvider email2FAProvider, IPhone2FAProvider phone2FAProvider, IEmailProvider emailProvider, IPhoneNumberProvider phoneProvider, ISecureTokenGenerator tokenGenerator)
     {
         _email2FAProvider = email2FAProvider;
         _phone2FAProvider = phone2FAProvider;
         _emailProvider = emailProvider;
         _phoneProvider = phoneProvider;
+        _tokenGenerator = tokenGenerator;
     }
 
     private IEmail2FAProvider _email2FAProvider;
     private IPhone2FAProvider _phone2FAProvider;
     private IEmailProvider _emailProvider;
     private IPhoneNumberProvider _phoneProvider;
+    private ISecureTokenGenerator _tokenGenerator;
 
     private IEmail2FA? _getEmail2FA(ILogin login) => _nullOnException(() =>
     {

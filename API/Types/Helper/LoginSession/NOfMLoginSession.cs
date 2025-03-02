@@ -1,3 +1,4 @@
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
 
 namespace Fiicode25Auth.API.Types.Helper.LoginSession;
@@ -36,6 +37,7 @@ public class NOfMLoginSession : ILoginSession
     
     public NOfMLoginSession(DateTime expiresAt,
                             Guid loginId,
+                            ISecureTokenGenerator tokenGenerator,
                             Guid? id = null,
                             IEmail2FA? email = null,
                             IPhone2FA? phone = null,
@@ -48,22 +50,11 @@ public class NOfMLoginSession : ILoginSession
         }
 
         Id=id;
-        IdentifyingToken=identifyingToken ?? _generateToken();
+        IdentifyingToken=identifyingToken ?? tokenGenerator.Base64Url128Bytes();
         ExpiresAt=expiresAt;
         Email=email;
         Phone=phone;
         LoginId=loginId;
         _minimumToSolve=mininumToSolve;
-    }
-
-    private string _generateToken()
-    {
-        var random = new Random();
-        var token = new byte[128];
-        random.NextBytes(token);
-
-        char[] padding = { '=' };
-        return System.Convert.ToBase64String(token)
-        .TrimEnd(padding).Replace('+', '-').Replace('/', '_');
     }
 }
