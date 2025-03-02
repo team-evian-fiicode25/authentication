@@ -18,11 +18,11 @@ public class LoginSessionService : ILoginSessionService
         return _qLoginSessionProvider.FromDBO(dbo);
     }
 
-    public async Task<IQueryableLoginSession> LogInWithPassword(string? id,
-                                                                string? username,
-                                                                string? email,
-                                                                string? phone,
-                                                                string password)
+    public async Task<IQueryableLoginSession> LogInWithPassword(string password,
+                                                                string? id = null,
+                                                                string? username = null,
+                                                                string? email = null,
+                                                                string? phone = null)
     {
         var loginDBO = await _loginRetriever.GetByIdentifier(id, username, phone, email);
         if (loginDBO == null)

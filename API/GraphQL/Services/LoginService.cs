@@ -10,7 +10,10 @@ namespace Fiicode25Auth.API.GraphQL.Services;
 
 public class LoginService : ILoginService
 {
-    public async Task<IQueryableLogin> Create(string? username, string? email, string? phoneNumber, string password)
+    public async Task<IQueryableLogin> Create(string password,
+                                              string? username = null,
+                                              string? email = null,
+                                              string? phoneNumber = null)
     {
         var login = _loginProviders.Login.NewWithPassword(password);
 
@@ -33,7 +36,10 @@ public class LoginService : ILoginService
         return _qLoginProvider.FromDBO(loginDBO);
     }
 
-    public async Task<IQueryableLogin?> Get(string? id, string? username, string? email, string? phone)
+    public async Task<IQueryableLogin?> Get(string? id = null,
+                                            string? username = null,
+                                            string? email = null,
+                                            string? phone = null)
     {
         var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email);
 
@@ -43,7 +49,10 @@ public class LoginService : ILoginService
         return _qLoginProvider.FromDBO(dbo);
     }
 
-    public async Task<IQueryableLogin?> Remove(string? id, string? username, string? email, string? phone)
+    public async Task<IQueryableLogin?> Remove(string? id = null,
+                                               string? username = null,
+                                               string? email = null,
+                                               string? phone = null)
     {
         var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email);
         if (dbo == null)

@@ -4,7 +4,16 @@ namespace Fiicode25Auth.API.GraphQL.Services.Abstract;
 
 public interface ILoginService
 {
-    Task<IQueryableLogin?> Get(string? id, string? username, string? email, string? phone);
-    Task<IQueryableLogin> Create(string? username, string? email, string? phoneNumber, string password);
-    Task<IQueryableLogin?> Remove(string? id, string? username, string? email, string? phone);
+    Task<IQueryableLogin?> Get(string? id = null,
+                               string? username = null,
+                               string? email = null,
+                               string? phone = null);
+    Task<IQueryableLogin> Create(string password,
+                                 string? username = null,
+                                 string? email = null,
+                                 string? phoneNumber = null);
+    Task<IQueryableLogin?> Remove(string? id = null,
+                                  string? username = null,
+                                  string? email = null,
+                                  string? phone = null);
 }
