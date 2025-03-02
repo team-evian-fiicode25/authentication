@@ -24,7 +24,7 @@ public class LoginSessionService : ILoginSessionService
                                                                 string? email = null,
                                                                 string? phone = null)
     {
-        var loginDBO = await _loginRetriever.GetByIdentifier(id, username, phone, email);
+        var loginDBO = await _loginRetriever.GetByIdentifier(id, username, phone, email, null);
         if (loginDBO == null)
             throw new GraphQLException("Wrong credentials");
 

@@ -9,10 +9,12 @@ public class Login : ILogin
     public IPassword Password {get; set;}
     public IPhoneNumber? PhoneNumber {get; set;}
     public IEmail? Email {get; set;}
+    public ISessionTokens SessionTokens {get; private set;}
 
-    public Login(IPassword password, Guid? id = null)
+    public Login(IPassword password, ISessionTokens sessionTokens, Guid? id = null)
     {
         Id=id;
         Password=password;
+        SessionTokens=sessionTokens;
     }
 }

@@ -18,4 +18,5 @@ public interface ILogin
     IPassword Password {get; set;}
     IPhoneNumber? PhoneNumber {get; set;}
     IEmail? Email {get; set;}
+    ISessionTokens SessionTokens {get;}
 }

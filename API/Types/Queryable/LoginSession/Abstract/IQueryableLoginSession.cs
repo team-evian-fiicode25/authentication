@@ -17,6 +17,8 @@ public interface IQueryableLoginSession
 
     bool IsSolved {get;}
 
+    Task<IQueryableSessionToken> SessionToken {get;}
+
     string CreatedAt {get;}
     string UpdatedAt {get;}
 }

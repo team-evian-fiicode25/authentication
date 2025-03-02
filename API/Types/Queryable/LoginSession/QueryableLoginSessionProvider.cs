@@ -11,16 +11,18 @@ public class QueryableLoginSessionProvider : IQueryableLoginSessionProvider
         => new QueryableLoginSession(
             loginSessionDBO: loginSession.LoginSession,
             loginSession: _loginSessionProvider.FromDBO(loginSession), 
-            loginService: _loginService
-            );
+            loginService: _loginService,
+            sessionService: _sessionService);
 
-    public QueryableLoginSessionProvider(ILoginSessionProvider loginSessionProvider, ILoginService loginService)
+    public QueryableLoginSessionProvider(ILoginSessionProvider loginSessionProvider, ILoginService loginService, ISessionService sessionService)
     {
         _loginSessionProvider = loginSessionProvider;
         _loginService = loginService;
+        _sessionService = sessionService;
     }
 
     private ILoginSessionProvider _loginSessionProvider;
     private ILoginService _loginService;
+    private ISessionService _sessionService;
 }
 

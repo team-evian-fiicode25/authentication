@@ -16,8 +16,9 @@ public class Query
                                            string? username,
                                            string? email,
                                            string? phone,
+                                           string? sessionToken,
                                            ILoginService loginService)
-        => loginService.Get(id, username, email, phone);
+        => loginService.Get(id, username, email, phone, sessionToken);
 
     public Task<IQueryableLoginSession?> GetLoginSession(string token, ILoginSessionService loginSessionService)
         => loginSessionService.Get(token);

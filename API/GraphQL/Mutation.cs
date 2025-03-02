@@ -17,8 +17,9 @@ public class Mutation
                                               string? username,
                                               string? email,
                                               string? phone,
+                                              string? sessionToken,
                                               ILoginService loginService)
-        => loginService.Remove(id, username, email, phone);
+        => loginService.Remove(id, username, email, phone, sessionToken);
 
     public Task<IQueryableLoginSession> LogInWithPassword(string? id,
                                                           string? username,

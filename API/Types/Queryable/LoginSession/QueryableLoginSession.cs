@@ -46,6 +46,7 @@ public class QueryableLoginSession : IQueryableLoginSession
     }}
 
     public Task<IQueryableLogin> Login => _getLogin();
+
     private async Task<IQueryableLogin> _getLogin()
     {
         var login = await _loginService.Get(id: _loginSession.LoginId.ToString());
@@ -56,17 +57,22 @@ public class QueryableLoginSession : IQueryableLoginSession
         return login;
     }
 
+    public Task<IQueryableSessionToken> SessionToken 
+        => _sessionService.MakeSessionToken(loginId: LoginId, sessionToken: IdentifyingToken);
 
     public QueryableLoginSession(ILoginSession loginSession,
                                  Database.DBObjects.LoginSession loginSessionDBO,
-                                 ILoginService loginService)
+                                 ILoginService loginService,
+                                 ISessionService sessionService)
     {
         _loginSession = loginSession;
         _loginSessionDBO = loginSessionDBO;
         _loginService = loginService;
+        _sessionService = sessionService;
     }
 
     private ILoginSession _loginSession;
     private Database.DBObjects.LoginSession _loginSessionDBO;
     private ILoginService _loginService;
+    private ISessionService _sessionService;
 }

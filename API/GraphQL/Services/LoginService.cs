@@ -39,9 +39,10 @@ public class LoginService : ILoginService
     public async Task<IQueryableLogin?> Get(string? id = null,
                                             string? username = null,
                                             string? email = null,
-                                            string? phone = null)
+                                            string? phone = null,
+                                            string? sessionToken = null)
     {
-        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email);
+        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
 
         if (dbo == null)
             return null;
@@ -52,9 +53,10 @@ public class LoginService : ILoginService
     public async Task<IQueryableLogin?> Remove(string? id = null,
                                                string? username = null,
                                                string? email = null,
-                                               string? phone = null)
+                                               string? phone = null,
+                                               string? sessionToken = null)
     {
-        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email);
+        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
         if (dbo == null)
             return null;
 
@@ -65,7 +67,11 @@ public class LoginService : ILoginService
         return _qLoginProvider.FromDBO(dbo);
     }
 
-    public LoginService(IDatabaseProvider dbProvider, AllLoginProviders loginProviders, IQueryableLoginProvider qLoginProvider, ILoginRetriever loginRetriever, IApplicationConfiguration config)
+    public LoginService(IDatabaseProvider dbProvider,
+                        AllLoginProviders loginProviders,
+                        IQueryableLoginProvider qLoginProvider,
+                        ILoginRetriever loginRetriever,
+                        IApplicationConfiguration config)
     {
         _dbProvider = dbProvider;
         _loginProviders = loginProviders;
@@ -80,3 +86,4 @@ public class LoginService : ILoginService
     private ILoginRetriever _loginRetriever;
     private IApplicationConfiguration _config;
 }
+

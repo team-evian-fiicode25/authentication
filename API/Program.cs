@@ -46,6 +46,10 @@ builder.Services
         .AddScoped<IQueryableLoginSessionProvider, QueryableLoginSessionProvider>()
         .AddScoped<ILoginSessionService, LoginSessionService>()
         .AddScoped<ISecureTokenGenerator, SecureTokenGenerator>()
+        .AddScoped<ISessionService, SessionService>()
+        .AddScoped<ISessionTokenProvider, SessionTokenProvider>()
+        .AddScoped<ISessionTokensProvider, SessionTokensProvider>()
+        .AddScoped<IQueryableSessionTokenProvider, QueryableSessionTokenProvider>()
         .AddGraphQLServer()
         .AddQueryType<Query>()
         .AddMutationType<Mutation>()
@@ -55,7 +59,9 @@ builder.Services
         .AddType<ObjectType<QueryableLogin>>()
         .AddType<ObjectType<QueryableEmail>>()
         .AddType<ObjectType<QueryablePhoneNumber>>()
-        .AddType<ObjectType<QueryableLoginSession>>();
+        .AddType<ObjectType<QueryableLoginSession>>()
+        .AddType<ObjectType<QueryableLoginSession>>()
+        .AddType<ObjectType<QueryableSessionToken>>();
 
 var dbConfig = config.DatabaseConfig;
 if(dbConfig.GetType() == typeof(InMemoryDatabaseConfiguration))

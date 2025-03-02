@@ -11,6 +11,8 @@ public class Login : ITimestamped, IIdentified
     public Email? Email {get; set;}
     public PhoneNumber? PhoneNumber {get; set;}
 
+    public List<SessionToken> SessionTokens {get; set;} = new();
+
     public Guid Id {get; set;}
     public DateTime CreatedAt {get; set;}
     public DateTime UpdatedAt {get; set;}
@@ -41,4 +43,10 @@ public class PhoneNumber
     ///     a verified phone number
     /// </remarks>
     public string? VerifyCode {get; set;}
+}
+
+public class SessionToken
+{
+    public required string Token {get; set;}
+    public DateTime Expiration {get; set;}
 }

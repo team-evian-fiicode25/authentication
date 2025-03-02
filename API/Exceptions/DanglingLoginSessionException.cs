@@ -8,4 +8,3 @@ public class DanglingLoginSessionException : DanglingReferenceException
         : base("Could not get corresponding login")
     {}
 }
-

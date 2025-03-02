@@ -12,7 +12,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified
         return _store.AsReadOnly();
     }
 
-    public async Task<T?> ById(Guid id)
+    public virtual async Task<T?> ById(Guid id)
         => _store.FirstOrDefault(el => el.Id == id);
 
     public virtual async Task<T> Commit(T obj)
@@ -33,7 +33,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified
         return obj;
     }
 
-    public async Task<T?> Remove(Guid id)
+    public virtual async Task<T?> Remove(Guid id)
     {
         var idx = _store.FindIndex(el => el.Id == id);
 
