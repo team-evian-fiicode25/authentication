@@ -20,13 +20,12 @@ public class LoginRetriever : ILoginRetriever
         {
             try
             {
-                Guid.Parse(id);
+                return _databaseProvider.Database.Logins.ById(Guid.Parse(id));
             }
             catch (System.FormatException)
             {
                 throw new IdFormatException();
             }
-            return _databaseProvider.Database.Logins.ByUsername(id);
         }
 
         if (username != null)
