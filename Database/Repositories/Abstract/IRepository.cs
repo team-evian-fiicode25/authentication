@@ -5,20 +5,20 @@ namespace Fiicode25Auth.Database.Repositories.Abstract;
 /// <summary>
 ///     Minimal API to manipulate a collection of <c>T</c>
 /// </summary>
-public interface IRepository<T> where T : class, IIdentified, ITimestamped 
+public interface IRepository<R, W> where W : class, IIdentified, ITimestamped 
 {
     /// <summary>Gets an item by its Id</summary>
     /// <remarks>If no item with the <c>id</c> exists, returns null</remarks>
-    Task<T?> ById(Guid id);
+    Task<R?> ById(Guid id);
 
-    IEnumerable<T> All();
+    IEnumerable<R> All();
 
     /// <summary>Removes the item with the id <c>id</c></summary>
     /// <returns>
     ///     The removed item, or null, if no item 
     ///     was found to match the provided id
     /// </returns>
-    Task<T?> Remove(Guid id);
+    Task<R?> Remove(Guid id);
 
     /// <summary>Commits <c>obj</c> to the collection</summary>
     /// <remarks>
@@ -35,5 +35,5 @@ public interface IRepository<T> where T : class, IIdentified, ITimestamped
     /// </para>
     /// </remarks>
     /// <returns>The created/updated item</returns> 
-    Task<T> Commit(T obj);
+    Task<R> Commit(W obj);
 }

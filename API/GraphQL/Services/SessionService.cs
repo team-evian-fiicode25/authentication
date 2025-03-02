@@ -11,7 +11,7 @@ public class SessionService : ISessionService
 {
     public async Task<IQueryableSessionToken?> MakeSessionToken(string loginId, string loginSessionToken)
     {
-        var loginSessionDBO = await _dbProvider.Database.LoginSessions.Get(loginSessionToken);
+        var loginSessionDBO = await _dbProvider.Database.LoginSessions.ByToken(loginSessionToken);
         if (loginSessionDBO == null)
         {
             throw new ArgumentException("Could not find login session");
@@ -35,20 +35,20 @@ public class SessionService : ISessionService
         var sessionToken = login.SessionTokens.Create();
 
         var database = _dbProvider.Database;
-        var success = (await database.LoginSessions
-            .Remove(loginSessionDBO.LoginSession.Id)) != null;
+        var removedSessionDBO = await database.LoginSessions
+            .Remove(loginSessionDBO.LoginSession.Id);
 
-        if(!success)
+        if (removedSessionDBO == null)
         {
             throw new Exception();
         }
 
-        loginDBO = await _dbProvider.Database.Logins.Commit(
-                            _loginProviders.Login.ToDBO(login));
+        var savedLoginDBO = await _dbProvider.Database.Logins.Commit(
+                                _loginProviders.Login.ToDBO(login));
 
         return _qSessionTokenProvider.FromDBO(
-                    login: loginDBO,
-                    sessionToken: loginDBO.SessionTokens.First(st => st.Token == sessionToken.Token)
+                    login: savedLoginDBO,
+                    sessionToken: savedLoginDBO.SessionTokens.First(st => st.Token == sessionToken.Token)
                 );
     }
 
