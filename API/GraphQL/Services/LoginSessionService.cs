@@ -11,7 +11,7 @@ public class LoginSessionService : ILoginSessionService
 {
     public async Task<IQueryableLoginSession?> Get(string token)
     {
-        var dbo = await _dbProvider.Database.LoginSessions.Get(token);
+        var dbo = await _dbProvider.Database.LoginSessions.ByToken(token);
         if(dbo == null)
             return null;
 
@@ -35,16 +35,8 @@ public class LoginSessionService : ILoginSessionService
 
         var loginSession = _loginSessionProvider.New(login);
 
-        // TODO: Update interface to return LoginSessionWith2FAData instead
-        var loginSessionToken
-            = (await _dbProvider.Database.LoginSessions.Commit(
-                    _loginSessionProvider.ToDBO(loginSession)
-                )).SecureIdentifier;
-
-        var loginSessionDBO = await _dbProvider.Database.LoginSessions.Get(loginSessionToken);
-
-        if (loginSessionDBO == null)
-            throw new Exception();
+        var loginSessionDBO = await _dbProvider.Database.LoginSessions.Commit(
+                                        _loginSessionProvider.ToDBO(loginSession));
 
         return _qLoginSessionProvider.FromDBO(loginSessionDBO);
     }
