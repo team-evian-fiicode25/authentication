@@ -14,7 +14,7 @@ public class SessionToken : ISessionToken
 
     public SessionToken(string token, DateTime expiresAt)
     {
-        if (ExpiresAt <= DateTime.UtcNow)
+        if (expiresAt <= DateTime.UtcNow)
         {
             throw new ArgumentException("Cannot create expired session token");
         }
