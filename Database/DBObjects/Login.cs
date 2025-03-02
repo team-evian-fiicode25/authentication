@@ -5,7 +5,7 @@ using Abstract;
 
 public class Login : ITimestamped, IIdentified
 {
-    public string PasswordHash {get; set;}
+    public required string PasswordHash {get; set;}
 
     public string? UserName {get; set;}
     public Email? Email {get; set;}
@@ -18,7 +18,7 @@ public class Login : ITimestamped, IIdentified
 
 public class Email
 {
-    public string Address {get; set;}
+    public required string Address {get; set;}
 
     /// <value>
     ///     Token to be received in mail, 
@@ -33,7 +33,7 @@ public class Email
 
 public class PhoneNumber
 {
-    public string Number {get; set;}
+    public required string Number {get; set;}
 
     /// <value>Verify code to be sent in SMS</value>
     /// <remarks>
