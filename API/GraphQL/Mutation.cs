@@ -1,95 +1,30 @@
-using Fiicode25Auth.API.Configuration.Abstract;
-using Fiicode25Auth.API.Exceptions;
-using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
-using Fiicode25Auth.API.Types.Helper.Login;
-using Fiicode25Auth.API.Types.Helper.Login.Abstract;
-using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
+using Fiicode25Auth.API.GraphQL.Services.Abstract;
 using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
 using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
-using Fiicode25Auth.Database.DBs.Abstract;
 
 namespace Fiicode25Auth.API.GraphQL;
 
 public class Mutation 
 {
-    public async Task<IQueryableLogin> CreateLogin(string? username,
+    public Task<IQueryableLogin> CreateLogin(string? username,
                                                    string? email,
                                                    string? phoneNumber,
                                                    string password,
-                                                   IDatabaseProvider dbProvider,
-                                                   AllLoginProviders loginProviders,
-                                                   IQueryableLoginProvider qLoginProvider,
-                                                   IApplicationConfiguration config)
-    {
-        var login = loginProviders.Login.NewWithPassword(password);
+                                                   ILoginService loginService)
+        => loginService.Create(username, email, phoneNumber, password);
 
-        if (username == null && config.MandatoryFields.HasFlag(Fields.Username))
-            throw new MissingRequiredUsernameException();
-        login.Username = username;
+    public Task<IQueryableLogin?> RemoveLogin(string? id,
+                                              string? username,
+                                              string? email,
+                                              string? phone,
+                                              ILoginService loginService)
+        => loginService.Remove(id, username, email, phone);
 
-        if (email != null)
-            login.Email = loginProviders.Email.NewFromAddress(email);
-        else if (config.MandatoryFields.HasFlag(Fields.Email))
-            throw new MissingRequiredEmailException();
-
-        if (phoneNumber != null)
-            login.PhoneNumber = loginProviders.Phone.New(phoneNumber);
-        else if (config.MandatoryFields.HasFlag(Fields.Phone))
-            throw new MissingRequiredPhoneException();
-
-        var loginDBO = await dbProvider.Database.Logins.Commit(loginProviders.Login.ToDBO(login));
-
-        return qLoginProvider.FromDBO(loginDBO);
-    }
-
-    public async Task<IQueryableLogin?> RemoveLogin(string id,
-                                                    IDatabaseProvider dbProvider,
-                                                    IQueryableLoginProvider qLoginProvider)
-    {
-        try 
-        {
-            var dbo = await dbProvider.Database.Logins.Remove(Guid.Parse(id));
-            if(dbo == null)
-                return null;
-
-            return qLoginProvider.FromDBO(dbo);
-        }
-        catch (System.FormatException)
-        {
-            throw new IdFormatException();
-        }
-    }
-
-    public async Task<IQueryableLoginSession> LogInWithPassword(string? id,
-                                                                string? username,
-                                                                string? email,
-                                                                string? phone,
-                                                                string password,
-                                                                ILoginRetriever loginRetriever,
-                                                                IDatabaseProvider dbProvider,
-                                                                ILoginProvider loginProvider,
-                                                                ILoginSessionProvider loginSessionProvider,
-                                                                IQueryableLoginSessionProvider qLoginSessionProvider)
-    {
-        var loginDBO = await loginRetriever.GetByIdentifier(id, username, phone, email);
-        if (loginDBO == null)
-            throw new GraphQLException("Wrong credentials");
-
-        var login = loginProvider.FromDBO(loginDBO);
-
-        if (!login.Password.Verify(password))
-            throw new GraphQLException("Wrong credentials");
-
-        var loginSession = loginSessionProvider.New(login);
-
-        // TODO: Update interface to return LoginSessionWith2FAData instead
-        var loginSessionToken
-            = (await dbProvider.Database.LoginSessions.Commit(
-                    loginSessionProvider.ToDBO(loginSession)
-                )).SecureIdentifier;
-
-        var loginSessionDBO = await dbProvider.Database.LoginSessions.Get(loginSessionToken);
-
-        return qLoginSessionProvider.FromDBO(loginSessionDBO);
-    }
+    public Task<IQueryableLoginSession> LogInWithPassword(string? id,
+                                                          string? username,
+                                                          string? email,
+                                                          string? phone,
+                                                          string password,
+                                                          ILoginSessionService loginSessionService)
+        => loginSessionService.LogInWithPassword(id, username, email, phone, password);
 }

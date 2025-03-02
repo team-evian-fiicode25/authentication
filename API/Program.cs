@@ -4,6 +4,8 @@ using Fiicode25Auth.API.GraphQL;
 using Fiicode25Auth.API.GraphQL.Filters;
 using Fiicode25Auth.API.GraphQL.Helpers;
 using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
+using Fiicode25Auth.API.GraphQL.Services;
+using Fiicode25Auth.API.GraphQL.Services.Abstract;
 using Fiicode25Auth.API.Types.Helper.Login;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 using Fiicode25Auth.API.Types.Helper.LoginSession;
@@ -36,11 +38,13 @@ builder.Services
         .AddScoped<IPasswordProvider, PasswordProvider>()
         .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
         .AddScoped<AllLoginProviders>()
+        .AddScoped<ILoginRetriever, LoginRetriever>()
+        .AddScoped<ILoginService, LoginService>()
         .AddScoped<ILoginSessionProvider, NOfMLoginSessionProvider>()
         .AddScoped<IEmail2FAProvider, SolvedEmail2FAProvider>()
         .AddScoped<IPhone2FAProvider, SolvedPhone2FAProvider>()
         .AddScoped<IQueryableLoginSessionProvider, QueryableLoginSessionProvider>()
-        .AddScoped<ILoginRetriever, LoginRetriever>()
+        .AddScoped<ILoginSessionService, LoginSessionService>()
         .AddGraphQLServer()
         .AddQueryType<Query>()
         .AddMutationType<Mutation>()
