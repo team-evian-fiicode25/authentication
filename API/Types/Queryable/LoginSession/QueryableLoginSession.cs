@@ -1,9 +1,9 @@
 using System.Globalization;
 using Fiicode25Auth.API.Exceptions;
+using Fiicode25Auth.API.GraphQL.Services.Abstract;
 using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
 using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
 using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
-using Fiicode25Auth.Database.DBs.Abstract;
 
 namespace Fiicode25Auth.API.Types.Queryable.LoginSession;
 
@@ -32,6 +32,7 @@ public class QueryableLoginSession : IQueryableLoginSession
 
         return options;
     }}
+
     public List<TwoFactorMean> Available2FAOptions { get {
         var options = new List<TwoFactorMean>();
 
@@ -47,28 +48,25 @@ public class QueryableLoginSession : IQueryableLoginSession
     public Task<IQueryableLogin> Login => _getLogin();
     private async Task<IQueryableLogin> _getLogin()
     {
-        var loginDBO = await _databaseProvider.Database.Logins.ById(_loginSession.LoginId);
+        var login = await _loginService.Get(id: _loginSession.LoginId.ToString());
 
-        if(loginDBO == null)
-            throw new DanglingLoginSessionException();
+        if (login == null)
+            throw new DanglingReferenceException();
 
-        return _qLoginProvider.FromDBO(loginDBO);
+        return login;
     }
 
 
     public QueryableLoginSession(ILoginSession loginSession,
                                  Database.DBObjects.LoginSession loginSessionDBO,
-                                 IDatabaseProvider databaseProvider,
-                                 IQueryableLoginProvider qLoginProvider)
+                                 ILoginService loginService)
     {
         _loginSession = loginSession;
         _loginSessionDBO = loginSessionDBO;
-        _databaseProvider = databaseProvider;
-        _qLoginProvider = qLoginProvider;
+        _loginService = loginService;
     }
 
     private ILoginSession _loginSession;
     private Database.DBObjects.LoginSession _loginSessionDBO;
-    private IDatabaseProvider _databaseProvider;
-    private IQueryableLoginProvider _qLoginProvider;
+    private ILoginService _loginService;
 }
