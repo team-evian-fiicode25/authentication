@@ -9,7 +9,7 @@ namespace Fiicode25Auth.API.GraphQL.Services;
 
 public class SessionService : ISessionService
 {
-    public async Task<IQueryableSessionToken> MakeSessionToken(string loginId, string loginSessionToken)
+    public async Task<IQueryableSessionToken?> MakeSessionToken(string loginId, string loginSessionToken)
     {
         var loginSessionDBO = await _dbProvider.Database.LoginSessions.Get(loginSessionToken);
         if (loginSessionDBO == null)
@@ -20,7 +20,7 @@ public class SessionService : ISessionService
 
         if(!loginSession.IsSolved)
         {
-            throw new GraphQLException("Login not solved");
+            return null;
         }
 
         var loginDBO = await _loginRetriever.GetByIdentifier(id: loginId);

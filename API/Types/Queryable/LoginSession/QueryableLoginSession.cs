@@ -57,7 +57,7 @@ public class QueryableLoginSession : IQueryableLoginSession
         return login;
     }
 
-    public Task<IQueryableSessionToken> SessionToken 
+    public Task<IQueryableSessionToken?> SessionToken 
         => _sessionService.MakeSessionToken(loginId: LoginId, sessionToken: IdentifyingToken);
 
     public QueryableLoginSession(ILoginSession loginSession,
