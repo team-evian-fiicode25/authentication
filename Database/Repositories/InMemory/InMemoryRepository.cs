@@ -3,16 +3,16 @@ using Fiicode25Auth.Database.Repositories.Abstract;
 
 namespace Fiicode25Auth.Database.Repositories.InMemory;
 
-public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentified, ITimestamped
+public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified, ITimestamped
 {
     protected List<T> _store=new List<T>();
 
-    public IEnumerable<T> All()
+    public virtual IEnumerable<T> All()
     {
         return _store.AsReadOnly();
     }
 
-    public async Task<T?> ById(Guid id)
+    public virtual async Task<T?> ById(Guid id)
         => _store.FirstOrDefault(el => el.Id == id);
 
     public virtual async Task<T> Commit(T obj)
@@ -27,13 +27,30 @@ public class InMemoryRepository<T> : IRepository<T> where T : struct, IIdentifie
             return obj;
         }
 
-        // Remove old item at O(1)
-        (_store[idx], _store[_store.Count-1]) 
-            = (_store[_store.Count-1], _store[idx]);
-        _store.RemoveAt(_store.Count-1);
+        _removeItemAtIndex(idx);
 
         _store.Add(obj);
         return obj;
+    }
+
+    public virtual async Task<T?> Remove(Guid id)
+    {
+        var idx = _store.FindIndex(el => el.Id == id);
+
+        if (idx == -1)
+            return null;
+
+        return _removeItemAtIndex(idx);
+    }
+
+    private T _removeItemAtIndex(int idx)
+    {
+        (_store[idx], _store[_store.Count-1]) 
+            = (_store[_store.Count-1], _store[idx]);
+
+        var item = _store[_store.Count-1];
+        _store.RemoveAt(_store.Count-1);
+        return item;
     }
 
     private T _sanitizeObject(T obj)

@@ -3,22 +3,24 @@ namespace Fiicode25Auth.Database.DBObjects;
 using System;
 using Abstract;
 
-public struct Login : ITimestamped, IIdentified
+public class Login : ITimestamped, IIdentified
 {
-    public string PasswordHash {get; set;}
+    public required string PasswordHash {get; set;}
 
     public string? UserName {get; set;}
     public Email? Email {get; set;}
     public PhoneNumber? PhoneNumber {get; set;}
+
+    public List<SessionToken> SessionTokens {get; set;} = new();
 
     public Guid Id {get; set;}
     public DateTime CreatedAt {get; set;}
     public DateTime UpdatedAt {get; set;}
 }
 
-public struct Email
+public class Email
 {
-    public string Address {get; set;}
+    public required string Address {get; set;}
 
     /// <value>
     ///     Token to be received in mail, 
@@ -31,9 +33,9 @@ public struct Email
     public string? VerifyToken {get; set;}
 }
 
-public struct PhoneNumber
+public class PhoneNumber
 {
-    public string Number {get; set;}
+    public required string Number {get; set;}
 
     /// <value>Verify code to be sent in SMS</value>
     /// <remarks>
@@ -41,4 +43,10 @@ public struct PhoneNumber
     ///     a verified phone number
     /// </remarks>
     public string? VerifyCode {get; set;}
+}
+
+public class SessionToken
+{
+    public required string Token {get; set;}
+    public DateTime Expiration {get; set;}
 }

@@ -9,5 +9,10 @@ namespace Fiicode25Auth.Database.DBs;
 /// </summary>
 public class InMemoryDatabase : IDatabase
 {
+
     public ILoginRepository Logins {get; private set;} = new InMemoryLoginRepository();
+
+    public ILoginSessionRepository LoginSessions  
+        => _loginSessions ??= new InMemoryLoginSessionRepository(Logins);
+    private ILoginSessionRepository? _loginSessions;
 }
