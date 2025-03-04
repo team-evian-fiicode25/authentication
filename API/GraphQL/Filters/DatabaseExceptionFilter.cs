@@ -17,6 +17,19 @@ public class DatabaseExceptionFilter : IErrorFilter
                 .WithMessage("Failed unique constraint on the username field");
         }
 
+        if(error.Exception is DuplicatePhoneNumberException)
+        {
+            return error
+                .WithCode("DUP_PHN")
+                .WithMessage("Failed unique constraint on the phone number field");
+        }
+
+        if(error.Exception is DuplicateEmailException)
+        {
+            return error
+                .WithCode("DUP_EML")
+                .WithMessage("Failed unique constraint on the email field");
+        }
         return error;
     }
 }

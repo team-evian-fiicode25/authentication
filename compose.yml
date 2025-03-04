@@ -1,0 +1,22 @@
+services:
+  auth-service:
+    build: .
+    environment:
+      MANDATORYFIELDS__USERNAME: '1'
+      MANDATORYFIELDS__PHONENUMBER: '0'
+      MANDATORYFIELDS__EMAIL: '1'
+      DATABASETYPE: mongo
+      MONGO__HOSTNAME: mongo
+      MONGO__PORT: 27017
+      MONGO__USER: root
+      MONGO__PASSWORD: root
+      MONGO__DATABASE: auth
+    ports:
+      - '5095:8080'
+
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
