@@ -19,9 +19,30 @@ public class LoginSession : ITimestamped, IIdentified
     public DateTime UpdatedAt {get; set;}
 }
 
-public class LoginSessionWith2FAData
+public class LoginSessionWith2FAData : ITimestamped, IIdentified
 {
     public required LoginSession LoginSession {get; set;}
     public Email? Email {get; set;}
     public PhoneNumber? PhoneNumber {get; set;}
+
+    public Guid Id {
+        get => LoginSession.Id;
+        set 
+        {
+            if(LoginSession == null)
+                return;
+
+            LoginSession.Id = value;
+        }
+    }
+
+    public DateTime CreatedAt { 
+        get => LoginSession.CreatedAt;
+        set => LoginSession.CreatedAt = value; 
+    }
+
+    public DateTime UpdatedAt { 
+        get => LoginSession.UpdatedAt;
+        set => LoginSession.UpdatedAt = value; 
+    }
 }

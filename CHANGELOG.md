@@ -47,3 +47,6 @@ service
     * This simplifies the updated mock in-memory implementation
     * This also makes said implementation less 'hackish' and work
     more similar to the proper one
+
+# v0.5.0
+Added a MongoDB implementation
