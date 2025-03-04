@@ -3,39 +3,45 @@ using Fiicode25Auth.Database.Repositories.Abstract;
 
 namespace Fiicode25Auth.Database.Repositories.InMemory;
 
-public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified, ITimestamped
+public abstract class InMemoryRepository<R, W> : IRepository<R, W> 
+    where W : class, IIdentified, ITimestamped 
+    where R : class
 {
-    protected List<T> _store=new List<T>();
+    protected abstract Task<R> _converter(W obj);
+    protected abstract Guid _id(R obj);
 
-    public virtual IEnumerable<T> All()
+    protected List<R> _store=new List<R>();
+
+    public virtual IEnumerable<R> All()
     {
         return _store.AsReadOnly();
     }
 
-    public virtual async Task<T?> ById(Guid id)
-        => _store.FirstOrDefault(el => el.Id == id);
+    public virtual async Task<R?> ById(Guid id)
+        => _store.FirstOrDefault(el => _id(el) == id);
 
-    public virtual async Task<T> Commit(T obj)
+    public virtual async Task<R> Commit(W obj)
     {
         obj=_sanitizeObject(obj);
+        var asRead = await _converter(obj);
 
-        var idx = _store.FindIndex(el => el.Id == obj.Id);
+        var idx = _store.FindIndex(el => _id(el) == obj.Id);
 
         if (idx == -1)
         {
-            _store.Add(obj);
-            return obj;
+            _store.Add(asRead);
+            return asRead;
         }
 
         _removeItemAtIndex(idx);
 
-        _store.Add(obj);
-        return obj;
+        _store.Add(asRead);
+        return asRead;
     }
 
-    public virtual async Task<T?> Remove(Guid id)
+    public virtual async Task<R?> Remove(Guid id)
     {
-        var idx = _store.FindIndex(el => el.Id == id);
+        var idx = _store.FindIndex(el => _id(el) == id);
 
         if (idx == -1)
             return null;
@@ -43,7 +49,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified
         return _removeItemAtIndex(idx);
     }
 
-    private T _removeItemAtIndex(int idx)
+    private R _removeItemAtIndex(int idx)
     {
         (_store[idx], _store[_store.Count-1]) 
             = (_store[_store.Count-1], _store[idx]);
@@ -53,7 +59,7 @@ public class InMemoryRepository<T> : IRepository<T> where T : class, IIdentified
         return item;
     }
 
-    private T _sanitizeObject(T obj)
+    private W _sanitizeObject(W obj)
     {
         if (obj.Id == Guid.Empty)
         {

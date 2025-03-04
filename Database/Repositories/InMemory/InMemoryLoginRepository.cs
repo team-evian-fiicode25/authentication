@@ -4,7 +4,7 @@ using Fiicode25Auth.Database.Repositories.Abstract;
 
 namespace Fiicode25Auth.Database.Repositories.InMemory;
 
-public class InMemoryLoginRepository : InMemoryRepository<Login>, ILoginRepository
+public class InMemoryLoginRepository : InMemoryRepository<Login, Login>, ILoginRepository
 {
     public async Task<Login?> ByUsername(string username)
         => _store.FirstOrDefault(l => l.UserName == username);
@@ -66,4 +66,10 @@ public class InMemoryLoginRepository : InMemoryRepository<Login>, ILoginReposito
 
         return login;
     }
+
+    protected override Task<Login> _converter(Login obj)
+        => Task.FromResult(obj);
+
+    protected override Guid _id(Login obj)
+        => obj.Id;
 }
