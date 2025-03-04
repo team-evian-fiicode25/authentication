@@ -1,13 +1,7 @@
 using Fiicode25Auth.API.Configuration;
 using Fiicode25Auth.API.Configuration.Abstract;
-using Fiicode25Auth.API.GraphQL;
-using Fiicode25Auth.API.Types.Helper;
-using Fiicode25Auth.API.Types.Helper.Abstract;
-using Fiicode25Auth.API.Types.Queryable;
-using Fiicode25Auth.API.Types.Queryable.Abstract;
-using Fiicode25Auth.Database.DBs;
-using Fiicode25Auth.Database.DBs.Abstract;
-using Microsoft.AspNetCore;
+using Fiicode25Auth.API.GraphQL.Helpers;
+using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 
 /// Exposes <c>Query</c> and <c>Mutation</c> through
 /// a GraphQL API on http://0.0.0.0:5095/graphql
@@ -17,46 +11,22 @@ using Microsoft.AspNetCore;
 /// sensitive info such as password hashes or secrets
 /// that do not concern other services
 
-var config = new ApplicationConfiguration(WebApplication.CreateBuilder(args).Configuration);
+var builder = WebApplication
+    .CreateBuilder(args);
 
-var builder = WebHost
-    .CreateDefaultBuilder(args);
+builder.Services
+        .AddDatabase(new ApplicationConfiguration(builder.Configuration))
+        .AddLoginTypes()
+        .AddLoginSessionTypes()
+        .AddScoped<IApplicationConfiguration, ApplicationConfiguration>()
+        .AddScoped<ISecureTokenGenerator, SecureTokenGenerator>()
+        .AddGraphQL()
+        .AddGraphQLErrorFilters()
+        .AddGraphQLLoginTypes()
+        .AddGraphQLLoginSessionTypes();
 
-builder
-    .ConfigureServices(services =>
-        services
-            .AddScoped<IApplicationConfiguration, ApplicationConfiguration>()
-            .AddScoped<ILoginProvider, LoginProvider>()
-            .AddScoped<IEmailProvider, EmailProvider>()
-            .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
-            .AddScoped<IPasswordProvider, PasswordProvider>()
-            .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
-            .AddScoped<AllLoginProviders>()
-            .AddGraphQLServer()
-            .AddQueryType<Query>()
-            .AddMutationType<Mutation>()
-            .AddErrorFilter<ExposeExceptionsFilter>()
-            .AddErrorFilter<DatabaseExceptionFilter>()
-            .AddErrorFilter<ErrorLoggingFilter>()
-            .AddType<ObjectType<QueryableLogin>>()
-            .AddType<ObjectType<QueryableEmail>>()
-            .AddType<ObjectType<QueryablePhoneNumber>>());
+var app = builder.Build();
+app.UseRouting()
+   .UseEndpoints(e => e.MapGraphQL());
 
-var dbConfig = config.DatabaseConfig;
-if(dbConfig.GetType() == typeof(InMemoryDatabaseConfiguration))
-{
-    builder.ConfigureServices(s => s.AddSingleton<IDatabaseProvider, InMemoryDatabaseProvider>());
-}
-else
-{
-    Console.Error.WriteLine("Unknown database configuration");
-    System.Environment.Exit(1);
-}
-
-builder
-    .Configure(builder =>
-        builder
-            .UseRouting()
-            .UseEndpoints(e => e.MapGraphQL()))
-    .Build()
-    .Run();
+await app.RunWithGraphQLCommandsAsync(args);

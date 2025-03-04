@@ -1,40 +1,31 @@
-using Fiicode25Auth.API.Configuration.Abstract;
-using Fiicode25Auth.API.Exceptions;
-using Fiicode25Auth.API.Types.Helper;
-using Fiicode25Auth.API.Types.Queryable.Abstract;
-using Fiicode25Auth.Database.DBs.Abstract;
+using Fiicode25Auth.API.GraphQL.Services.Abstract;
+using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
+using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
 
 namespace Fiicode25Auth.API.GraphQL;
 
 public class Mutation 
 {
-    public async Task<IQueryableLogin> CreateLogin(string? username,
+    public Task<IQueryableLogin> CreateLogin(string? username,
                                                    string? email,
                                                    string? phoneNumber,
                                                    string password,
-                                                   IDatabaseProvider dbProvider,
-                                                   AllLoginProviders loginProviders,
-                                                   IQueryableLoginProvider qLoginProvider,
-                                                   IApplicationConfiguration config)
-    {
-        var login = loginProviders.Login.NewWithPassword(password);
+                                                   ILoginService loginService)
+        => loginService.Create(password, username, email, phoneNumber);
 
-        if (username == null && config.MandatoryFields.HasFlag(Fields.Username))
-            throw new MissingRequiredUsernameException();
-        login.Username = username;
+    public Task<IQueryableLogin?> RemoveLogin(string? id,
+                                              string? username,
+                                              string? email,
+                                              string? phone,
+                                              string? sessionToken,
+                                              ILoginService loginService)
+        => loginService.Remove(id, username, email, phone, sessionToken);
 
-        if (email != null)
-            login.Email = loginProviders.Email.NewFromAddress(email);
-        else if (config.MandatoryFields.HasFlag(Fields.Email))
-            throw new MissingRequiredEmailException();
-
-        if (phoneNumber != null)
-            login.PhoneNumber = loginProviders.Phone.New(phoneNumber);
-        else if (config.MandatoryFields.HasFlag(Fields.Phone))
-            throw new MissingRequiredPhoneException();
-
-        var loginDBO = await dbProvider.Database.Logins.Commit(loginProviders.Login.ToDBO(login));
-
-        return qLoginProvider.FromDBO(loginDBO);
-    }
+    public Task<IQueryableLoginSession> LogInWithPassword(string? id,
+                                                          string? username,
+                                                          string? email,
+                                                          string? phone,
+                                                          string password,
+                                                          ILoginSessionService loginSessionService)
+        => loginSessionService.LogInWithPassword(password, id, username, email, phone);
 }

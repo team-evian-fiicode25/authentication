@@ -8,9 +8,19 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         var name = _config["DatabaseType"];
 
-        if (name == "InMemory")
-        {
+        if (name == "memory")
             return new InMemoryDatabaseConfiguration();
+
+        if (name == "mongo")
+        {
+            return new MongoDatabaseConfiguration()
+            {
+                HostName = _getRequired("Mongo:HostName"),
+                Port = int.Parse(_getRequired("Mongo:Port")),
+                User = _getRequired("Mongo:User"),
+                Password = _getRequired("Mongo:Password"),
+                Database = _getRequired("Mongo:Database")
+            };
         }
 
         return new InMemoryDatabaseConfiguration();
@@ -32,6 +42,14 @@ public class ApplicationConfiguration : IApplicationConfiguration
         return fields;
     }}
 
+    private string _getRequired(string query)
+    {
+        var conf = _config[query];
+        if(conf == null)
+            throw new Exception($"Missing required configuration: {query}");
+
+        return conf;
+    }
     public ApplicationConfiguration(IConfiguration config) {_config=config;}
     private IConfiguration _config;
 }
