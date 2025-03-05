@@ -40,3 +40,10 @@ Refactors:
 - Refactored all logic in Query/Mutation object into separate
 service
 - Other small refactors
+
+# v0.4.1
+* Refactor DI into extension methods
+* Update IRepositories to enable different types for reading/writing
+    * This simplifies the updated mock in-memory implementation
+    * This also makes said implementation less 'hackish' and work
+    more similar to the proper one
