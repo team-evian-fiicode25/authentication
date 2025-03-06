@@ -27,9 +27,20 @@ public class LoginService : ILoginService
             throw new MissingRequiredEmailException();
 
         if (phoneNumber != null)
-            login.PhoneNumber = _loginProviders.Phone.New(phoneNumber);
+        {
+            try
+            {
+                login.PhoneNumber = _loginProviders.Phone.New(phoneNumber);
+            }
+            catch (PhoneNumberFormatException)
+            {
+                throw;
+            }
+        }
         else if (_config.MandatoryFields.HasFlag(Fields.Phone))
+        {
             throw new MissingRequiredPhoneException();
+        }
 
         var loginDBO = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
 
