@@ -1,4 +1,3 @@
-using System;
 using System.Text.RegularExpressions;
 using Fiicode25Auth.API.Exceptions;
 
@@ -10,7 +9,6 @@ public class PhoneNumberValue : IEquatable<PhoneNumberValue>
     
     private const string DefaultCountryCode = "40";
     
-    // TODO (mihaescuvlad): Break this into smaller methods
     public static PhoneNumberValue Create(string phoneNumber)
     {
         if (string.IsNullOrWhiteSpace(phoneNumber))
@@ -34,7 +32,7 @@ public class PhoneNumberValue : IEquatable<PhoneNumberValue>
             {
                 var withPlus = "+" + cleaned;
                 if (withPlus.Length > 16)
-                    throw new PhoneNumberFormatException($"Phone number is too long. E.164 allows a maximum of 15 digits after teh +.");
+                    throw new PhoneNumberFormatException($"Phone number is too long. E.164 allows a maximum of 15 digits after the +.");
                 
                 return new PhoneNumberValue(withPlus);
             }
