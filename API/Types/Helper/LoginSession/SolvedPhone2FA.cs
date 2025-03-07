@@ -1,10 +1,15 @@
+using System.Text.RegularExpressions;
+using Fiicode25Auth.API.Exceptions;
 using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
+using Fiicode25Auth.API.Types.Value;
 
 namespace Fiicode25Auth.API.Types.Helper.LoginSession;
 
 public class SolvedPhone2FA : IPhone2FA
 {
-    public string Number {get; private set;}
+    private readonly PhoneNumberValue _phoneNumber;
+    
+    public string Number => _phoneNumber.Value;
 
     public string? VerifyCode 
         => RequestCode();
@@ -19,7 +24,7 @@ public class SolvedPhone2FA : IPhone2FA
     
     public SolvedPhone2FA(string number)
     {
-        Number = number;
+        _phoneNumber = PhoneNumberValue.Create(number);
     }
 }
 

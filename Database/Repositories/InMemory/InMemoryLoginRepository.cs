@@ -31,6 +31,24 @@ public class InMemoryLoginRepository : InMemoryRepository<Login, Login>, ILoginR
                 throw new DuplicateUsernameException();
             }
         }
+        
+        if(obj.Email != null)
+        {
+            var login = await ByEmail(obj.Email.Address);
+            if(login != null && login?.Id != obj.Id)
+            {
+                throw new DuplicateEmailException();
+            }
+        }
+        
+        if(obj.PhoneNumber != null)
+        {
+            var login = await ByPhoneNumber(obj.PhoneNumber.Number);
+            if(login != null && login?.Id != obj.Id)
+            {
+                throw new DuplicatePhoneNumberException();
+            }
+        }
 
         return await base.Commit(_filterExiredSessions(obj));
     }
