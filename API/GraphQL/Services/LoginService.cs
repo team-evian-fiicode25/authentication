@@ -97,6 +97,32 @@ public class LoginService : ILoginService
         return qLogin;
     }
 
+    public async Task<IQueryableLogin> RequestPhoneNumberVerification(string? id = null,
+                                                                      string? username = null,
+                                                                      string? email = null,
+                                                                      string? phone = null,
+                                                                      string? sessionToken = null)
+    {
+        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
+
+        if (dbo == null)
+            throw new MissingLoginException();
+
+        var login = _loginProviders.Login.FromDBO(dbo);
+
+        if (login.PhoneNumber == null)
+            throw new MissingPhoneNumberException("Cannot request verification for a non-existing phone number");
+
+        login.PhoneNumber.RequestVerification();
+
+        dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
+
+        var qLogin = _qLoginProvider.FromDBO(dbo);
+        await _eventSender.SendAsync("PhoneVerificationRequested", qLogin);
+
+        return qLogin;
+    }
+
     public LoginService(IDatabaseProvider dbProvider,
                         AllLoginProviders loginProviders,
                         IQueryableLoginProvider qLoginProvider,

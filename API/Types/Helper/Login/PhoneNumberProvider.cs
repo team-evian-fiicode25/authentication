@@ -11,7 +11,7 @@ public class PhoneNumberProvider : IPhoneNumberProvider
         => new PhoneNumber(phoneNumber, _tokenGenerator);
 
     public IPhoneNumber FromDBO(Database.DBObjects.PhoneNumber phoneNumber)
-        => new PhoneNumber(phoneNumber.Number, phoneNumber.VerifyCode);
+        => new PhoneNumber(phoneNumber.Number, phoneNumber.VerifyCode, _tokenGenerator);
 
     public Database.DBObjects.PhoneNumber ToDBO(IPhoneNumber phoneNumber) => new()
     {
