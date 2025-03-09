@@ -27,6 +27,7 @@ builder.Services
 
 var app = builder.Build();
 app.UseRouting()
+   .UseWebSockets()
    .UseEndpoints(e => e.MapGraphQL());
 
 await app.RunWithGraphQLCommandsAsync(args);
