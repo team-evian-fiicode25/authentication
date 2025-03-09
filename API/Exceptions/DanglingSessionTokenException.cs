@@ -1,6 +1,6 @@
 namespace Fiicode25Auth.API.Exceptions;
 
-public class DanglingSessionTokenException : DanglingReferenceException
+public class DanglingSessionTokenException : MissingItemException
 {
     public override string ErrorCode => $"{base.ErrorCode}_STOKEN";
 
