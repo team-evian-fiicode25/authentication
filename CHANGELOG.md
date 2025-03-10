@@ -50,3 +50,7 @@ service
 
 # v0.5.0
 Added a MongoDB implementation
+
+# v0.6.0
+- Added phone number verification
+- Added Docker entrypoint to simplify schema retrieval
