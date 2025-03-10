@@ -9,7 +9,13 @@ RUN dotnet publish -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:9.0
 WORKDIR /App
+
+COPY bin/docker-entrypoint.sh entrypoint
+RUN chmod +x entrypoint
+
 COPY --from=build /App/out .
 
 EXPOSE 5000
-ENTRYPOINT ["dotnet", "Fiicode25Auth.API.dll"]
+ENV ENTRYPOINT="./Fiicode25Auth.API.dll"
+ENTRYPOINT ["./entrypoint"]
+CMD [ "start-server" ]
