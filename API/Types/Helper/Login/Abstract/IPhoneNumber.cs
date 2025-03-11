@@ -5,4 +5,5 @@ public interface IPhoneNumber
     string Number {get;}
     bool IsVerified {get;}
     string? VerifyCode {get;}
+    string RequestVerification();
 }
