@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+
 using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 
 namespace Fiicode25Auth.API.GraphQL.Helpers;
@@ -6,9 +8,7 @@ public class SecureTokenGenerator : ISecureTokenGenerator
 {
     public string Base64Url128Bytes()
     {
-        var random = new Random();
-        var token = new byte[128];
-        random.NextBytes(token);
+        var token = RandomNumberGenerator.GetBytes(128);
 
         char[] padding = { '=' };
         return System.Convert.ToBase64String(token)
@@ -16,5 +16,17 @@ public class SecureTokenGenerator : ISecureTokenGenerator
     }
 
     public string RandomDigits6()
-        => (new Random().NextInt64() % (int)Math.Pow(10, 6)).ToString();
+    {
+        const int length = 6;
+
+        var num = RandomNumberGenerator
+            .GetInt32((int)Math.Pow(10, length))
+            .ToString();
+
+        var paddingSize = Math.Max(0, length - num.Length);
+
+        var padding = string.Join("", Enumerable.Repeat("0", paddingSize));
+
+        return padding + num;
+    }
 }
