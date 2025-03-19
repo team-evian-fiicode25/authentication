@@ -54,3 +54,7 @@ Added a MongoDB implementation
 # v0.6.0
 - Added phone number verification
 - Added Docker entrypoint to simplify schema retrieval
+
+# v0.7.0-msg-integration-test1
+Exposes experimental subscription APIs to integrate
+with other services
