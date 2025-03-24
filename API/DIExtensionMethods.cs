@@ -76,11 +76,11 @@ public static class DIExtensionMethods
             return services.AddSingleton<IDatabaseProvider, InMemoryDatabaseProvider>();
         }
 
-        var mongoConfig = dbConfig as MongoDatabaseConfiguration;
+        var mongoConfig = dbConfig as IMongoDatabaseConfiguration;
         if (mongoConfig != null)
         {
             return services.AddSingleton<IDatabaseProvider>(provider => 
-                    new MongoDatabaseProvider(mongoConfig.url, mongoConfig.Database));
+                    new MongoDatabaseProvider(mongoConfig.Url, mongoConfig.Database));
         }
 
         throw new Exception("Unknown database configuration");

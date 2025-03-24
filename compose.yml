@@ -6,11 +6,7 @@ services:
       MANDATORYFIELDS__PHONENUMBER: '0'
       MANDATORYFIELDS__EMAIL: '1'
       DATABASETYPE: mongo
-      MONGO__HOSTNAME: mongo
-      MONGO__PORT: 27017
-      MONGO__USER: root
-      MONGO__PASSWORD: root
-      MONGO__DATABASE: auth
+      MONGO__URL: mongodb://root:root@mongo:27017
     ports:
       - '5095:8080'
 

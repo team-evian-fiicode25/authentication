@@ -13,7 +13,12 @@ public class ApplicationConfiguration : IApplicationConfiguration
 
         if (name == "mongo")
         {
-            return new MongoDatabaseConfiguration()
+            var url = _config["Mongo:Url"];
+            if (url != null) {
+                return new MongoDatabaseConfigurationUrl(url);
+            }
+
+            return new MongoDatabaseConfigurationIndividualVariables()
             {
                 HostName = _getRequired("Mongo:HostName"),
                 Port = int.Parse(_getRequired("Mongo:Port")),
