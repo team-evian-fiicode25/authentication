@@ -4,6 +4,25 @@ namespace Fiicode25Auth.API.Configuration;
 
 public class ApplicationConfiguration : IApplicationConfiguration
 {
+    public Fields MandatoryFields
+    {
+        get
+        {
+            var fields = Fields.None;
+
+            if (_config["MandatoryFields:Username"] == "1")
+                fields |= Fields.Username;
+
+            if (_config["MandatoryFields:PhoneNumber"] == "1")
+                fields |= Fields.Phone;
+
+            if (_config["MandatoryFields:Email"] == "1")
+                fields |= Fields.Email;
+
+            return fields;
+        }
+    }
+
     public IDatabaseConfiguration DatabaseConfig { get 
     {
         var name = _config["DatabaseType"];
@@ -29,22 +48,6 @@ public class ApplicationConfiguration : IApplicationConfiguration
         }
 
         return new InMemoryDatabaseConfiguration();
-    }}
-
-    public Fields MandatoryFields { get 
-    {
-        var fields = Fields.None;
-
-        if (_config["MandatoryFields:Username"] == "1")
-            fields |= Fields.Username;
-
-        if (_config["MandatoryFields:PhoneNumber"] == "1")
-            fields |= Fields.Phone;
-
-        if (_config["MandatoryFields:Email"] == "1")
-            fields |= Fields.Email;
-
-        return fields;
     }}
 
     private string _getRequired(string query)
