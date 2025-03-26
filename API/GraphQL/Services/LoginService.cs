@@ -20,7 +20,8 @@ public class LoginService : ILoginService
 
         if (username == null && _config.MandatoryFields.HasFlag(Fields.Username))
             throw new MissingRequiredUsernameException();
-        login.Username = username;
+        if (username != null)
+            login.Username = _loginProviders.UsernameValue.Create(username);
 
         if (email != null)
             login.Email = _loginProviders.Email.NewFromAddress(email);

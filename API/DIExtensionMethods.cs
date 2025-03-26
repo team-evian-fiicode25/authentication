@@ -13,11 +13,13 @@ using Fiicode25Auth.API.Types.Queryable.Login;
 using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
 using Fiicode25Auth.API.Types.Queryable.LoginSession;
 using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
+using Fiicode25Auth.API.Types.Value;
+using Fiicode25Auth.API.Types.Value.Abstract;
 using Fiicode25Auth.Database.DBs;
 using Fiicode25Auth.Database.DBs.Abstract;
 using HotChocolate.Execution.Configuration;
 
-public static class DIExtensionMethods 
+public static class DIExtensionMethods
 {
     public static IRequestExecutorBuilder AddGraphQL(this IServiceCollection services)
         => services
@@ -45,8 +47,11 @@ public static class DIExtensionMethods
             .AddErrorFilter<DatabaseExceptionFilter>()
             .AddErrorFilter<ErrorLoggingFilter>();
 
-    public static IServiceCollection AddLoginTypes(this IServiceCollection services)
-        => services
+    public static IServiceCollection AddLoginTypes(this IServiceCollection services, IApplicationConfiguration config)
+    { 
+        _addUsernameValue(services, config);
+
+        return services
             .AddScoped<ILoginProvider, LoginProvider>()
             .AddScoped<IEmailProvider, EmailProvider>()
             .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
@@ -59,6 +64,7 @@ public static class DIExtensionMethods
             .AddScoped<ISessionTokensProvider, SessionTokensProvider>()
             .AddScoped<IQueryableSessionTokenProvider, QueryableSessionTokenProvider>()
             .AddScoped<ISessionService, SessionService>();
+    }
 
     public static IServiceCollection AddLoginSessionTypes(this IServiceCollection services)
         => services
@@ -67,6 +73,25 @@ public static class DIExtensionMethods
             .AddScoped<IPhone2FAProvider, SolvedPhone2FAProvider>()
             .AddScoped<IQueryableLoginSessionProvider, QueryableLoginSessionProvider>()
             .AddScoped<ILoginSessionService, LoginSessionService>();
+
+    private static void _addUsernameValue(IServiceCollection services, IApplicationConfiguration config)
+    {
+        var usernameConfig = config.UsernameConfig;
+
+        if (usernameConfig is UnconstrainedUsernameConfiguration)
+        {
+            services.AddScoped<IUsernameValueProvider, UnconstrainedUsernameValueProvider>();
+            return;
+        }
+
+        var alphaNumericalUserConfig = usernameConfig as AlphaNumericalUsernameConfiguration;
+        if(alphaNumericalUserConfig != null)
+        {
+            services.AddScoped<IUsernameValueProvider>(provider => 
+                    new AlphaNumericalUsernameValueProvider(alphaNumericalUserConfig));
+            return;
+        }
+    }
 
     public static IServiceCollection AddDatabase(this IServiceCollection services, IApplicationConfiguration config)
     {
@@ -79,7 +104,7 @@ public static class DIExtensionMethods
         var mongoConfig = dbConfig as IMongoDatabaseConfiguration;
         if (mongoConfig != null)
         {
-            return services.AddSingleton<IDatabaseProvider>(provider => 
+            return services.AddSingleton<IDatabaseProvider>(provider =>
                     new MongoDatabaseProvider(mongoConfig.Url, mongoConfig.Database));
         }
 
