@@ -4,16 +4,16 @@ using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 
 namespace Fiicode25Auth.API.Types.Helper.Login;
 
-public class Password : IPassword
+public class BcryptHashedPassword : IPassword
 {
     public string Hash {get; private set;}
 
     public bool Verify(string password)
         => BCrypt.Net.BCrypt.Verify(password, Hash);
 
-    public Password(string passwordHash) => Hash=passwordHash;
+    public BcryptHashedPassword(string passwordHash) => Hash=passwordHash;
 
-    public static Password FromPassword(string password)
+    public static BcryptHashedPassword FromPassword(string password)
     {
         _validatePassword(password);
 

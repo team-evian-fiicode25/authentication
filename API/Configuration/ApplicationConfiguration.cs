@@ -77,6 +77,22 @@ public class ApplicationConfiguration : IApplicationConfiguration
         }
     }
 
+    public IPasswordConfiguration PasswordConfig
+    {
+        get
+        {
+            var name = _config["PasswordType"]?.ToLower();
+
+            if (name == "insecure")
+                return new InsecurePasswordConfiguration();
+
+            if (name == "bcrypt")
+                return new BcryptHashedPasswordConfiguration();
+
+            return new BcryptHashedPasswordConfiguration();
+        }
+    }
+
     private bool _getOption(string query)
     {
         var conf = _config[query];

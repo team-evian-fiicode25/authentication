@@ -4,6 +4,7 @@ public interface IApplicationConfiguration
 {
     IDatabaseConfiguration DatabaseConfig {get;}
     IUsernameConfiguration UsernameConfig {get;}
+    IPasswordConfiguration PasswordConfig {get;}
     Fields MandatoryFields {get;}
 }
 

@@ -50,12 +50,12 @@ public static class DIExtensionMethods
     public static IServiceCollection AddLoginTypes(this IServiceCollection services, IApplicationConfiguration config)
     { 
         _addUsernameValue(services, config);
+        _addPassword(services, config);
 
         return services
             .AddScoped<ILoginProvider, LoginProvider>()
             .AddScoped<IEmailProvider, EmailProvider>()
             .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
-            .AddScoped<IPasswordProvider, PasswordProvider>()
             .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
             .AddScoped<AllLoginProviders>()
             .AddScoped<ILoginRetriever, LoginRetriever>()
@@ -91,6 +91,23 @@ public static class DIExtensionMethods
                     new AlphaNumericalUsernameValueProvider(alphaNumericalUserConfig));
             return;
         }
+    }
+
+    private static void _addPassword(IServiceCollection services, IApplicationConfiguration config)
+    {
+        if(config.PasswordConfig is InsecurePasswordConfiguration)
+        {
+            services.AddScoped<IPasswordProvider, InsecurePasswordProvider>();
+            return;
+        }
+
+        if(config.PasswordConfig is BcryptHashedPasswordConfiguration)
+        {
+            services.AddScoped<IPasswordProvider, InsecurePasswordProvider>();
+            return;
+        }
+
+        throw new Exception("Unknown password configuration");
     }
 
     public static IServiceCollection AddDatabase(this IServiceCollection services, IApplicationConfiguration config)
