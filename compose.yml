@@ -2,9 +2,6 @@ services:
   auth-service:
     build: .
     environment:
-      MANDATORYFIELDS__USERNAME: '1'
-      MANDATORYFIELDS__PHONENUMBER: '0'
-      MANDATORYFIELDS__EMAIL: '1'
       DATABASETYPE: mongo
       MONGO__URL: mongodb://root:root@mongo:27017
     ports:
