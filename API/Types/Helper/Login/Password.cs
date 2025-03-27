@@ -59,7 +59,6 @@ public class Password : IPassword
             throw new PasswordFormatException("Passwords should contain at least one number");
         }
 
-
         if (!password.Any(ch =>
                     !numericalChars.Contains(ch) &&
                     !lowercaseChars.Contains(ch) &&
@@ -67,6 +66,5 @@ public class Password : IPassword
         {
             throw new PasswordFormatException("Passwords should contain at least one special character");
         }
-
     }
 }
