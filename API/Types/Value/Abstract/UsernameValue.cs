@@ -15,5 +15,5 @@ public abstract class UsernameValue : IEquatable<UsernameValue>
     }
 
     public override string ToString() => Value;
-    public static implicit operator string?(UsernameValue? username) => username?.Value;
+    public static implicit operator string(UsernameValue username) => username.Value;
 }

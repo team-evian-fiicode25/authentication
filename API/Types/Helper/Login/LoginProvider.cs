@@ -28,7 +28,7 @@ public class LoginProvider : ILoginProvider
     public Database.DBObjects.Login ToDBO(ILogin login) => new()
     {
         Id = login.Id ?? Guid.Empty,
-        UserName = login.Username,
+        UserName = login.Username?.Value,
         PasswordHash = login.Password.Hash,
         Email = login.Email != null ? _emailProvider.ToDBO(login.Email) : null,
         PhoneNumber = login.PhoneNumber != null ?
