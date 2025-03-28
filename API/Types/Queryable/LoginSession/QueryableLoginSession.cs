@@ -52,7 +52,7 @@ public class QueryableLoginSession : IQueryableLoginSession
         var login = await _loginService.Get(id: _loginSession.LoginId.ToString());
 
         if (login == null)
-            throw new DanglingLoginSessionException();
+            throw new DanglingReferenceException();
 
         return login;
     }

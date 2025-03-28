@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+using Fiicode25Auth.API.Exceptions;
 using Fiicode25Auth.API.Types.Helper.LoginSession.Abstract;
 using Fiicode25Auth.API.Types.Value;
 

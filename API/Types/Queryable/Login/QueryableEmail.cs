@@ -7,7 +7,6 @@ public class QueryableEmail : IQueryableEmail
 {
     public string Address => _email.Address;
     public bool IsVerified => _email.IsVerified;
-    public string? VerifyToken => _email.VerifyToken;
 
     public QueryableEmail(IEmail email)
     {

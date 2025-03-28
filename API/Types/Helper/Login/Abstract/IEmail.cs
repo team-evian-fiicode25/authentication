@@ -7,6 +7,4 @@ public interface IEmail
 
     /// <value>Verification token to be sent in email</value>
     string? VerifyToken {get;}
-
-    string RequestVerification();
 }

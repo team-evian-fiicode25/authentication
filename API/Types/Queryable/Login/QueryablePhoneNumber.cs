@@ -7,7 +7,6 @@ public class QueryablePhoneNumber : IQueryablePhoneNumber
 {
     public string Number => _phoneNumber.Number;
     public bool IsVerified => _phoneNumber.IsVerified;
-    public string? VerifyCode => _phoneNumber.VerifyCode;
 
     public QueryablePhoneNumber(IPhoneNumber phoneNumber)
     {

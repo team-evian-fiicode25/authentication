@@ -21,14 +21,6 @@ public class Email : IEmail
 
     public string? VerifyToken {get; private set;}
 
-    public string RequestVerification()
-    {
-        if (IsVerified)
-            throw new GraphQLException("Cannot request verification for an already verified email");
-
-        return VerifyToken = _tokenGenerator.Base64Url128Bytes();
-    }
-
     private string _validateEmail(string email)
     {
         if(!Regex.IsMatch(email, """^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$"""))
@@ -40,17 +32,14 @@ public class Email : IEmail
     {
         _address="";
         Address=address;  
-        _tokenGenerator=tokenGenerator;
         VerifyToken=tokenGenerator.Base64Url128Bytes();
     }
 
-    public Email(string address, string? token, ISecureTokenGenerator tokenGenerator)
+    public Email(string address, string? token)
     {
         _address="";
         Address=address;
         VerifyToken=token;
-        _tokenGenerator=tokenGenerator;
     }
 
-    private ISecureTokenGenerator _tokenGenerator;
 }
