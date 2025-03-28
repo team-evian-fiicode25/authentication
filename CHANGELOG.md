@@ -55,6 +55,13 @@ Added a MongoDB implementation
 - Added phone number verification
 - Added Docker entrypoint to simplify schema retrieval
 
-# v0.7.0-msg-integration-test1
-Exposes experimental subscription APIs to integrate
-with other services
+# v0.7.0
+- Updated README
+- Added validations for the email and phone number fields
+- Overhauled configuration options
+    - Also added a reference file for the configuration
+- Added configurable username validator
+- Added option to configure insecure plain-text passwords
+    - Updated the default hashed password to also enforce
+    its length and complexity
+- Now using CSPRNG instead of insecure Random class
