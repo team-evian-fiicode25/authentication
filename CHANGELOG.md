@@ -57,7 +57,7 @@ Added a MongoDB implementation
 
 # v0.7.0
 - Updated README
-- Added validations for the email and phone number fields
+- Added validation for the email field
 - Overhauled configuration options
     - Also added a reference file for the configuration
 - Added configurable username validator
