@@ -2,8 +2,8 @@ services:
   auth-service:
     build: .
     environment:
-      DATABASETYPE: mongo
-      MONGO__URL: mongodb://root:root@mongo:27017
+      MANDATORYFIELDS__USERNAME: true
+      DATABASE__MONGO__URL: mongodb://root:root@mongo:27017
     ports:
       - '5095:8080'
 

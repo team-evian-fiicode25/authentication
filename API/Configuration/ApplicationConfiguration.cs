@@ -8,72 +8,77 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         get
         {
+            var section = _config.GetSection("MandatoryFields");
+
             var fields = Fields.None;
 
-            if (_getOption("MandatoryFields:Username"))
+            if (section.GetValue<bool>("Username"))
                 fields |= Fields.Username;
 
-            if (_getOption("MandatoryFields:PhoneNumber"))
+            if (section.GetValue<bool>("PhoneNumber"))
                 fields |= Fields.Phone;
 
-            if (_getOption("MandatoryFields:Email"))
+            if (section.GetValue<bool>("Email"))
                 fields |= Fields.Email;
 
             return fields;
         }
     }
 
-    public IDatabaseConfiguration DatabaseConfig { get 
+    public IDatabaseConfiguration DatabaseConfig
     {
-        var name = _config["DatabaseType"]?.ToLower();
-
-        if (name == "memory")
-            return new InMemoryDatabaseConfiguration();
-
-        if (name == "mongo")
+        get
         {
-            var url = _config["Mongo:Url"];
-            if (url != null) {
-                return new MongoDatabaseConfigurationUrl(url);
+            var section = _config.GetSection("Database");
+
+            if (section.GetSection("InMemory").Exists())
+                return new InMemoryDatabaseConfiguration();
+
+            var mongoSection = section.GetSection("Mongo");
+            if (mongoSection.Exists())
+            {
+                IMongoDatabaseConfiguration? result;
+
+                if (mongoSection["Url"] != null)
+                {
+                    result = mongoSection.Get<MongoDatabaseConfigurationUrl>();
+                }
+                else
+                {
+                    result = mongoSection.Get<MongoDatabaseConfigurationIndividualVariables>();
+                }
+
+                if (result != null)
+                    return result;
+
+                throw new Exception("Invalid mongo configuration");
             }
 
-            return new MongoDatabaseConfigurationIndividualVariables()
-            {
-                HostName = _getRequired("Mongo:HostName"),
-                Port = _getIntRequired("Mongo:Port"),
-                User = _getRequired("Mongo:User"),
-                Password = _getRequired("Mongo:Password"),
-                Database = _getRequired("Mongo:Database")
-            };
+            return new InMemoryDatabaseConfiguration();
         }
-
-        return new InMemoryDatabaseConfiguration();
-    }}
+    }
 
     public IUsernameConfiguration UsernameConfig
     {
         get
         {
-            var name = _config["UsernameValidator"]?.ToLower();
+            var section = _config.GetSection("UsernameValidator");
 
-            if (name == "unconstrained")
+            if (section.GetSection("Unconstrained").Exists())
                 return new UnconstrainedUsernameConfiguration();
 
-            if (name == "alphanumerical")
+            var alphaNumericalSection = section.GetSection("AlphaNumerical");
+            if (alphaNumericalSection.Exists())
             {
-                return new AlphaNumericalUsernameConfiguration()
-                {
-                    MinimumLength = _getInt("AlphaNumericalUsername:MinimumLength") ?? 3,
-                    MaximumLength = _getInt("AlphaNumericalUsername:MinimumLength") ?? 1 << 30,
-                    AllowNumbers = _getOption("AlphaNumericalUsername:AllowNumbers"),
-                    AllowUppercase = _getOption("AlphaNumericalUsername:AllowUppercase"),
-                    AllowDotSeparator = _getOption("AlphaNumericalUsername:AllowDotSeparator"),
-                    AllowDashSeparator = _getOption("AlphaNumericalUsername:AllowDashSeparator"),
-                    AllowUnderlineSeparator = _getOption("AlphaNumericalUsername:AllowUnderlineSeparator")
-                };
+                var result = alphaNumericalSection.Get<AlphaNumericalUsernameConfiguration>();
+
+                if (result != null)
+                    return result;
+                
+                return new AlphaNumericalUsernameConfiguration();
             }
 
-            return new UnconstrainedUsernameConfiguration();
+            return new AlphaNumericalUsernameConfiguration();
         }
     }
 
@@ -81,57 +86,18 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         get
         {
-            var name = _config["PasswordType"]?.ToLower();
+            var section = _config.GetSection("Password");
 
-            if (name == "insecure")
+            if (_config.GetSection("Insecure").Exists())
                 return new InsecurePasswordConfiguration();
 
-            if (name == "bcrypt")
+            if (_config.GetSection("Bcrypt").Exists())
                 return new BcryptHashedPasswordConfiguration();
 
             return new BcryptHashedPasswordConfiguration();
         }
     }
 
-    private bool _getOption(string query)
-    {
-        var conf = _config[query];
-
-        if (conf == null)
-            return false;
-
-        conf = conf.ToLower();
-        if (conf == "1" || conf == "true" || conf == "yes")
-            return true;
-
-        if (conf == "0" || conf == "false" || conf == "no")
-            return false;
-
-        throw new Exception($"Wrong boolean configration received: {conf}");
-    }
-
-    private int? _getInt(string query)
-    {
-        var conf = _config[query];
-
-        if (conf == null)
-            return null;
-
-        return int.Parse(conf);
-    }
-
-    private int _getIntRequired(string query)
-        => int.Parse(_getRequired(query));
-
-    private string _getRequired(string query)
-    {
-        var conf = _config[query];
-
-        if(conf == null)
-            throw new Exception($"Missing required configuration: {query}");
-
-        return conf;
-    }
     public ApplicationConfiguration(IConfiguration config) {_config=config;}
     private IConfiguration _config;
 }

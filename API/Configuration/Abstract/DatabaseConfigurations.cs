@@ -16,11 +16,11 @@ public interface IMongoDatabaseConfiguration : IDatabaseConfiguration
 
 public class MongoDatabaseConfigurationUrl : IMongoDatabaseConfiguration
 {
-    private string _url;
+    private string? _url;
     public string Url
     {
-        get => _url;
-        private set
+        get => _url ?? "";
+        set
         {
 
             var prefixRemoved = Regex.Replace(value, @".*:\/\/", "");
@@ -48,21 +48,15 @@ public class MongoDatabaseConfigurationUrl : IMongoDatabaseConfiguration
 
     private string? _database;
     public string Database => _database ?? "authentication";
-
-    public MongoDatabaseConfigurationUrl(string url)
-    {
-        _url = "";
-        Url = url;
-    }
 }
 
 public class MongoDatabaseConfigurationIndividualVariables : IMongoDatabaseConfiguration
 {
     public required string HostName {get; set;}
-    public required int Port {get; set;}
-    public required string User {get; set;}
+    public required int Port {get; set;} = 27017;
+    public required string User {get; set;} = "admin";
     public required string Password {get; set;}
-    public required string Database {get; set;}
+    public required string Database {get; set;} = "authentication";
 
     public string Url => $"mongodb://{User}:{Password}@{HostName}:{Port}";
 }
