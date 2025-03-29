@@ -14,9 +14,11 @@ using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 var builder = WebApplication
     .CreateBuilder(args);
 
+var appConfig = new ApplicationConfiguration(builder.Configuration);
+
 builder.Services
-        .AddDatabase(new ApplicationConfiguration(builder.Configuration))
-        .AddLoginTypes()
+        .AddDatabase(appConfig)
+        .AddLoginTypes(appConfig)
         .AddLoginSessionTypes()
         .AddScoped<IApplicationConfiguration, ApplicationConfiguration>()
         .AddScoped<ISecureTokenGenerator, SecureTokenGenerator>()
@@ -27,7 +29,6 @@ builder.Services
 
 var app = builder.Build();
 app.UseRouting()
-   .UseWebSockets()
    .UseEndpoints(e => e.MapGraphQL());
 
 await app.RunWithGraphQLCommandsAsync(args);

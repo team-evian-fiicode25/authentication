@@ -1,4 +1,5 @@
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
+using Fiicode25Auth.API.Types.Value.Abstract;
 
 namespace Fiicode25Auth.API.Types.Helper.Login;
 
@@ -15,7 +16,8 @@ public class LoginProvider : ILoginProvider
             _emailProvider.FromDBO(login.Email) : null;
         l.PhoneNumber = login.PhoneNumber != null ? 
             _phoneNumberProvider.FromDBO(login.PhoneNumber) : null;
-        l.Username = login.UserName;
+        l.Username = login.UserName != null ?
+            _usernameProvider.Create(login.UserName) : null;
 
         return l;
     }
@@ -26,7 +28,7 @@ public class LoginProvider : ILoginProvider
     public Database.DBObjects.Login ToDBO(ILogin login) => new()
     {
         Id = login.Id ?? Guid.Empty,
-        UserName = login.Username,
+        UserName = login.Username?.Value,
         PasswordHash = login.Password.Hash,
         Email = login.Email != null ? _emailProvider.ToDBO(login.Email) : null,
         PhoneNumber = login.PhoneNumber != null ?
@@ -34,17 +36,20 @@ public class LoginProvider : ILoginProvider
         SessionTokens = _sessionTokensProvider.ToDBO(login.SessionTokens)
     };
 
-    public LoginProvider(IEmailProvider emailProvider,
+    public LoginProvider(IUsernameValueProvider usernameProvider,
+                         IEmailProvider emailProvider,
                          IPhoneNumberProvider phoneNumberProvider,
                          IPasswordProvider passwordProvider,
                          ISessionTokensProvider sessionTokensProvider)
     {
+        _usernameProvider = usernameProvider;
         _emailProvider = emailProvider;
         _phoneNumberProvider = phoneNumberProvider;
         _passwordProvider = passwordProvider;
         _sessionTokensProvider = sessionTokensProvider;
     }
 
+    private IUsernameValueProvider _usernameProvider;
     private IEmailProvider _emailProvider;
     private IPhoneNumberProvider _phoneNumberProvider;
     private IPasswordProvider _passwordProvider;

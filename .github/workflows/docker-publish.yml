@@ -71,7 +71,7 @@ jobs:
         context: ${{ steps.get_build_context.outputs.build_context }}
         platforms: linux/amd64,linux/arm64/v8
         push: True
-        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+        tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.TAG }},${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

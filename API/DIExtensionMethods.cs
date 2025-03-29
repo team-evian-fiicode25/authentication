@@ -13,19 +13,19 @@ using Fiicode25Auth.API.Types.Queryable.Login;
 using Fiicode25Auth.API.Types.Queryable.Login.Abstract;
 using Fiicode25Auth.API.Types.Queryable.LoginSession;
 using Fiicode25Auth.API.Types.Queryable.LoginSession.Abstract;
+using Fiicode25Auth.API.Types.Value;
+using Fiicode25Auth.API.Types.Value.Abstract;
 using Fiicode25Auth.Database.DBs;
 using Fiicode25Auth.Database.DBs.Abstract;
 using HotChocolate.Execution.Configuration;
 
-public static class DIExtensionMethods 
+public static class DIExtensionMethods
 {
     public static IRequestExecutorBuilder AddGraphQL(this IServiceCollection services)
         => services
             .AddGraphQLServer()
-            .AddInMemorySubscriptions()
             .AddQueryType<Query>()
-            .AddMutationType<Mutation>()
-            .AddSubscriptionType<Subscription>();
+            .AddMutationType<Mutation>();
 
     public static IRequestExecutorBuilder AddGraphQLLoginTypes(this IRequestExecutorBuilder services)
         => services
@@ -45,12 +45,15 @@ public static class DIExtensionMethods
             .AddErrorFilter<DatabaseExceptionFilter>()
             .AddErrorFilter<ErrorLoggingFilter>();
 
-    public static IServiceCollection AddLoginTypes(this IServiceCollection services)
-        => services
+    public static IServiceCollection AddLoginTypes(this IServiceCollection services, IApplicationConfiguration config)
+    { 
+        _addUsernameValue(services, config);
+        _addPassword(services, config);
+
+        return services
             .AddScoped<ILoginProvider, LoginProvider>()
             .AddScoped<IEmailProvider, EmailProvider>()
             .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
-            .AddScoped<IPasswordProvider, PasswordProvider>()
             .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
             .AddScoped<AllLoginProviders>()
             .AddScoped<ILoginRetriever, LoginRetriever>()
@@ -59,6 +62,7 @@ public static class DIExtensionMethods
             .AddScoped<ISessionTokensProvider, SessionTokensProvider>()
             .AddScoped<IQueryableSessionTokenProvider, QueryableSessionTokenProvider>()
             .AddScoped<ISessionService, SessionService>();
+    }
 
     public static IServiceCollection AddLoginSessionTypes(this IServiceCollection services)
         => services
@@ -68,6 +72,42 @@ public static class DIExtensionMethods
             .AddScoped<IQueryableLoginSessionProvider, QueryableLoginSessionProvider>()
             .AddScoped<ILoginSessionService, LoginSessionService>();
 
+    private static void _addUsernameValue(IServiceCollection services, IApplicationConfiguration config)
+    {
+        var usernameConfig = config.UsernameConfig;
+
+        if (usernameConfig is UnconstrainedUsernameConfiguration)
+        {
+            services.AddScoped<IUsernameValueProvider, UnconstrainedUsernameValueProvider>();
+            return;
+        }
+
+        var alphaNumericalUserConfig = usernameConfig as AlphaNumericalUsernameConfiguration;
+        if(alphaNumericalUserConfig != null)
+        {
+            services.AddScoped<IUsernameValueProvider>(provider => 
+                    new AlphaNumericalUsernameValueProvider(alphaNumericalUserConfig));
+            return;
+        }
+    }
+
+    private static void _addPassword(IServiceCollection services, IApplicationConfiguration config)
+    {
+        if(config.PasswordConfig is InsecurePasswordConfiguration)
+        {
+            services.AddScoped<IPasswordProvider, InsecurePasswordProvider>();
+            return;
+        }
+
+        if(config.PasswordConfig is BcryptHashedPasswordConfiguration)
+        {
+            services.AddScoped<IPasswordProvider, InsecurePasswordProvider>();
+            return;
+        }
+
+        throw new Exception("Unknown password configuration");
+    }
+
     public static IServiceCollection AddDatabase(this IServiceCollection services, IApplicationConfiguration config)
     {
         var dbConfig = config.DatabaseConfig;
@@ -76,11 +116,11 @@ public static class DIExtensionMethods
             return services.AddSingleton<IDatabaseProvider, InMemoryDatabaseProvider>();
         }
 
-        var mongoConfig = dbConfig as MongoDatabaseConfiguration;
+        var mongoConfig = dbConfig as IMongoDatabaseConfiguration;
         if (mongoConfig != null)
         {
-            return services.AddSingleton<IDatabaseProvider>(provider => 
-                    new MongoDatabaseProvider(mongoConfig.url, mongoConfig.Database));
+            return services.AddSingleton<IDatabaseProvider>(provider =>
+                    new MongoDatabaseProvider(mongoConfig.Url, mongoConfig.Database));
         }
 
         throw new Exception("Unknown database configuration");

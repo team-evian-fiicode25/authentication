@@ -1,10 +1,12 @@
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
+using Fiicode25Auth.API.Types.Value.Abstract;
 
 namespace Fiicode25Auth.API.Types.Helper.Login;
 
 public class AllLoginProviders 
 {
     public ILoginProvider Login {get; private set;}
+    public IUsernameValueProvider UsernameValue{get; private set;}
     public IPasswordProvider Password {get; private set;}
     public IEmailProvider Email {get; private set;}
     public IPhoneNumberProvider Phone {get; private set;}
@@ -12,6 +14,7 @@ public class AllLoginProviders
     public ISessionTokensProvider SessionTokens {get; private set;}
 
     public AllLoginProviders(ILoginProvider login,
+                             IUsernameValueProvider usernameValue,
                              IPasswordProvider password,
                              IEmailProvider email,
                              IPhoneNumberProvider phone,
@@ -19,6 +22,7 @@ public class AllLoginProviders
                              ISessionTokensProvider sessionTokens)
     {
         Login = login;
+        UsernameValue = usernameValue;
         Password = password;
         Email = email;
         Phone = phone;

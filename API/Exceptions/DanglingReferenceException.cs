@@ -1,18 +1,19 @@
 namespace Fiicode25Auth.API.Exceptions;
 
-public class MissingItemException : GraphQLExposedException
+public class DanglingReferenceException : GraphQLExposedException
 {
     public override string ErrorCode => "MISSING";
 
-    public MissingItemException()
+    public DanglingReferenceException()
     {
     }
 
-    public MissingItemException(string? message) : base(message)
+    public DanglingReferenceException(string? message) : base(message)
     {
     }
 
-    public MissingItemException(string? message, Exception? innerException) : base(message, innerException)
+    public DanglingReferenceException(string? message, Exception? innerException) : base(message, innerException)
     {
     }
 }
+

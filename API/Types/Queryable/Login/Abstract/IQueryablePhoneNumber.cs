@@ -4,6 +4,5 @@ public interface IQueryablePhoneNumber
 {
     string Number {get;}
     bool IsVerified {get;}
-    string? VerifyCode {get;}
 }
 

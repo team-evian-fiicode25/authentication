@@ -1,4 +1,11 @@
 # Fiicode25 Authentication
+Service to manage user credentials and login sessions.
 
-This is an under development service to provide authentication
-for [this](https://github.com/Team-Evian-Fiicode25) project.
+## API schema
+You can pull out the schema by running:
+```bash
+docker run --rm 'ghcr.io/team-evian-fiicode25/authentication:latest' show-schema
+```
+
+## Configuration reference
+A detailed configuration reference can be found [here](https://github.com/team-evian-fiicode25/authentication/blob/main/.github/READMEs/configuring.md)

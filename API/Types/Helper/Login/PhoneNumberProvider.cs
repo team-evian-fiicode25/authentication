@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+using Fiicode25Auth.API.Exceptions;
 using Fiicode25Auth.API.GraphQL.Helpers.Abstract;
 using Fiicode25Auth.API.Types.Helper.Login.Abstract;
 
@@ -9,7 +11,7 @@ public class PhoneNumberProvider : IPhoneNumberProvider
         => new PhoneNumber(phoneNumber, _tokenGenerator);
 
     public IPhoneNumber FromDBO(Database.DBObjects.PhoneNumber phoneNumber)
-        => new PhoneNumber(phoneNumber.Number, phoneNumber.VerifyCode, _tokenGenerator);
+        => new PhoneNumber(phoneNumber.Number, phoneNumber.VerifyCode);
 
     public Database.DBObjects.PhoneNumber ToDBO(IPhoneNumber phoneNumber) => new()
     {

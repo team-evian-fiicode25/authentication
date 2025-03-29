@@ -1,3 +1,5 @@
+using Fiicode25Auth.API.Types.Value.Abstract;
+
 namespace Fiicode25Auth.API.Types.Helper.Login.Abstract;
 
 /// <summary>
@@ -14,7 +16,7 @@ public interface ILogin
     ///     throw-away temporary representation of a login
     /// </remarks>
     Guid? Id {get;} 
-    string? Username {get; set;}
+    UsernameValue? Username {get; set;}
     IPassword Password {get; set;}
     IPhoneNumber? PhoneNumber {get; set;}
     IEmail? Email {get; set;}
