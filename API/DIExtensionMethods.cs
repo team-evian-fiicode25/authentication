@@ -101,7 +101,7 @@ public static class DIExtensionMethods
 
         if(config.PasswordConfig is BcryptHashedPasswordConfiguration)
         {
-            services.AddScoped<IPasswordProvider, InsecurePasswordProvider>();
+            services.AddScoped<IPasswordProvider, BcryptHashedPasswordProvider>();
             return;
         }
 

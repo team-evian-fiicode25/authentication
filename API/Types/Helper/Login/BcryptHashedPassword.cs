@@ -22,9 +22,9 @@ public class BcryptHashedPassword : IPassword
 
     private static void _validatePassword(string password)
     {
-        if (password.Length < 12)
+        if (password.Length < 8)
         {
-            throw new PasswordFormatException("Passwords must be at least 12 characters long");
+            throw new PasswordFormatException("Passwords must be at least 8 characters long");
         }
 
         if (Regex.IsMatch(password, @"\s"))

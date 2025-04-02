@@ -65,3 +65,9 @@ Added a MongoDB implementation
     - Updated the default hashed password to also enforce
     its length and complexity
 - Now using CSPRNG instead of insecure Random class
+
+# v0.7.1
+- Fixed an issue where insecure passwords were used regardless 
+of the specified configuration
+- Reduce the minimum size of a bcrypt hashed password to 8
+characters

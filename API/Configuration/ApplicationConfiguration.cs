@@ -88,10 +88,10 @@ public class ApplicationConfiguration : IApplicationConfiguration
         {
             var section = _config.GetSection("Password");
 
-            if (_config.GetSection("Insecure").Exists())
+            if (section.GetSection("Insecure").Exists())
                 return new InsecurePasswordConfiguration();
 
-            if (_config.GetSection("Bcrypt").Exists())
+            if (section.GetSection("Bcrypt").Exists())
                 return new BcryptHashedPasswordConfiguration();
 
             return new BcryptHashedPasswordConfiguration();
