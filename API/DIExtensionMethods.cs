@@ -24,8 +24,10 @@ public static class DIExtensionMethods
     public static IRequestExecutorBuilder AddGraphQL(this IServiceCollection services)
         => services
             .AddGraphQLServer()
+            .AddInMemorySubscriptions()
             .AddQueryType<Query>()
-            .AddMutationType<Mutation>();
+            .AddMutationType<Mutation>()
+            .AddSubscriptionType<Subscription>();
 
     public static IRequestExecutorBuilder AddGraphQLLoginTypes(this IRequestExecutorBuilder services)
         => services

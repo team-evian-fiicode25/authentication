@@ -28,18 +28,29 @@ public class Email : IEmail
         return email;
     }
 
+    public string RequestVerification()
+    {
+        if (IsVerified)
+            throw new GraphQLException("Cannot request verification for an already verified email");
+
+        return VerifyToken = _tokenGenerator.Base64Url128Bytes();
+    }
+
     public Email(string address, ISecureTokenGenerator tokenGenerator)
     {
         _address="";
         Address=address;  
+        _tokenGenerator=tokenGenerator;
         VerifyToken=tokenGenerator.Base64Url128Bytes();
     }
 
-    public Email(string address, string? token)
+    public Email(string address, string? token, ISecureTokenGenerator tokenGenerator)
     {
         _address="";
         Address=address;
         VerifyToken=token;
+        _tokenGenerator=tokenGenerator;
     }
 
+    private ISecureTokenGenerator _tokenGenerator;
 }
