@@ -36,7 +36,7 @@ public class LoginService : ILoginService
         var loginDBO = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
         var qLogin = _qLoginProvider.FromDBO(loginDBO);
 
-        await _eventSender.SendAsync("LoginCreated", qLogin);
+        await _eventSender.SendAsync(nameof(Subscription.LoginCreated), qLogin);
 
         return qLogin;
     }
@@ -120,7 +120,7 @@ public class LoginService : ILoginService
         dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
 
         var dto = _loginProviders.EmailVerificationDTO.FromDBO(dbo);
-        await _eventSender.SendAsync("EmailVerificationRequested", dto);
+        await _eventSender.SendAsync(nameof(Subscription.EmailVerificationRequested), dto);
 
         return dto;
     }
@@ -146,7 +146,7 @@ public class LoginService : ILoginService
         dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
 
         var dto = _loginProviders.PhoneVerificationDTO.FromDBO(dbo);
-        await _eventSender.SendAsync("PhoneVerificationRequested", dto);
+        await _eventSender.SendAsync(nameof(Subscription.PhoneVerificationRequested), dto);
 
         return dto;
     }
