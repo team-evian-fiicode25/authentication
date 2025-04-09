@@ -72,6 +72,33 @@ public class LoginService : ILoginService
         return _qLoginProvider.FromDBO(dbo);
     }
 
+    public async Task<IQueryableLogin> VerifyEmail(string verificationToken,
+                                                   string? id = null,
+                                                   string? username = null,
+                                                   string? email = null,
+                                                   string? phone = null,
+                                                   string? sessionToken = null)
+    {
+        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
+
+        if (dbo == null)
+            throw new MissingLoginException();
+
+        var login = _loginProviders.Login.FromDBO(dbo);
+
+        if (login.Email == null)
+            throw new MissingEmailException();
+
+        var success = login.Email.VerifyIfMatches(verificationToken);
+
+        if (!success)
+            throw new InvalidSecretException("Wrong token provided");
+
+        dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
+
+        return _qLoginProvider.FromDBO(dbo);
+    }
+
     public async Task<IEmailVerificationDTO> RequestEmailVerification(string? id = null,
                                                                       string? username = null,
                                                                       string? email = null,
@@ -122,6 +149,34 @@ public class LoginService : ILoginService
         await _eventSender.SendAsync("PhoneVerificationRequested", dto);
 
         return dto;
+    }
+
+
+    public async Task<IQueryableLogin> VerifyPhoneNumber(string verificationCode,
+                                                         string? id = null,
+                                                         string? username = null,
+                                                         string? email = null,
+                                                         string? phone = null,
+                                                         string? sessionToken = null)
+    {
+        var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
+
+        if (dbo == null)
+            throw new MissingLoginException();
+
+        var login = _loginProviders.Login.FromDBO(dbo);
+
+        if (login.PhoneNumber == null)
+            throw new MissingPhoneNumberException();
+
+        var success = login.PhoneNumber.VerifyIfMatches(verificationCode);
+
+        if (!success)
+            throw new InvalidSecretException("Wrong code provided");
+
+        dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
+
+        return _qLoginProvider.FromDBO(dbo);
     }
 
     public LoginService(IDatabaseProvider dbProvider,

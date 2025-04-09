@@ -37,6 +37,15 @@ public class Mutation
                                                                 ILoginService loginService)
         => loginService.RequestEmailVerification(id, username, email, phone, sessionToken);
 
+    public Task<IQueryableLogin> VerifyEmail(string verificationToken,
+                                             string? id,
+                                             string? username,
+                                             string? email,
+                                             string? phone,
+                                             string? sessionToken,
+                                             ILoginService loginService)
+        => loginService.VerifyEmail(verificationToken, id, username, email, phone, sessionToken);
+
     public Task<IPhoneVerificationDTO> RequestPhoneNumberVerification(string? id,
                                                                       string? username,
                                                                       string? email,
@@ -44,4 +53,13 @@ public class Mutation
                                                                       string? sessionToken,
                                                                       ILoginService loginService)
         => loginService.RequestPhoneNumberVerification(id, username, email, phone, sessionToken);
+
+    public Task<IQueryableLogin> VerifyPhoneNumber(string verificationCode,
+                                                   string? id,
+                                                   string? username,
+                                                   string? email,
+                                                   string? phone,
+                                                   string? sessionToken,
+                                                   ILoginService loginService)
+        => loginService.VerifyPhoneNumber(verificationCode, id, username, email, phone, sessionToken);
 }

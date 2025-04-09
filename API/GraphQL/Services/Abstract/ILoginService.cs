@@ -16,11 +16,25 @@ public interface ILoginService
                                                          string? phone = null,
                                                          string? sessionToken = null);
 
+    Task<IQueryableLogin> VerifyEmail(string verificationToken,
+                                      string? id = null,
+                                      string? username = null,
+                                      string? email = null,
+                                      string? phone = null,
+                                      string? sessionToken = null);
+
     Task<IPhoneVerificationDTO> RequestPhoneNumberVerification(string? id = null,
                                                                string? username = null,
                                                                string? email = null,
                                                                string? phone = null,
                                                                string? sessionToken = null);
+
+    Task<IQueryableLogin> VerifyPhoneNumber(string verifyCode,
+                                            string? id = null,
+                                            string? username = null,
+                                            string? email = null,
+                                            string? phone = null,
+                                            string? sessionToken = null);
 
     Task<IQueryableLogin> Create(string password,
                                  string? username = null,

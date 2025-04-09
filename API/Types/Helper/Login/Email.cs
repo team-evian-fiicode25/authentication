@@ -17,16 +17,9 @@ public class Email : IEmail
         }
     }
 
-    public bool IsVerified => VerifyToken == null;
+    public bool IsVerified {get; private set;}
 
     public string? VerifyToken {get; private set;}
-
-    private string _validateEmail(string email)
-    {
-        if(!Regex.IsMatch(email, """^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$"""))
-            throw new EmailFormatException();
-        return email;
-    }
 
     public string RequestVerification()
     {
@@ -36,18 +29,41 @@ public class Email : IEmail
         return VerifyToken = _tokenGenerator.Base64Url128Bytes();
     }
 
+    public void Verify()
+    {
+        IsVerified = true;
+        VerifyToken = null;
+    }
+
+    public bool VerifyIfMatches(string token)
+    {
+        if(token != VerifyToken)
+            return false;
+
+        Verify();
+        return true;
+    }
+
+    private string _validateEmail(string email)
+    {
+        if(!Regex.IsMatch(email, """^[\w\-\.]+@([\w-]+\.)+[\w-]{2,}$"""))
+            throw new EmailFormatException();
+        return email;
+    }
+
     public Email(string address, ISecureTokenGenerator tokenGenerator)
     {
         _address="";
         Address=address;  
+        IsVerified=false;
         _tokenGenerator=tokenGenerator;
-        VerifyToken=tokenGenerator.Base64Url128Bytes();
     }
 
-    public Email(string address, string? token, ISecureTokenGenerator tokenGenerator)
+    public Email(string address, bool isVerified, string? token, ISecureTokenGenerator tokenGenerator)
     {
         _address="";
         Address=address;
+        IsVerified=isVerified;
         VerifyToken=token;
         _tokenGenerator=tokenGenerator;
     }

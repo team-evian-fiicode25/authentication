@@ -8,5 +8,8 @@ public interface IEmail
     /// <value>Verification token to be sent in email</value>
     string? VerifyToken {get;}
 
+    void Verify();
+    bool VerifyIfMatches(string token);
+
     string RequestVerification();
 }
