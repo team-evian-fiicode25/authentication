@@ -3,6 +3,7 @@ namespace Fiicode25Auth.API.Configuration.Abstract;
 public interface IApplicationConfiguration
 {
     IDatabaseConfiguration DatabaseConfig {get;}
+    ISubscriptionProviderConfiguration SubscriptionProviderConfig {get;}
     IUsernameConfiguration UsernameConfig {get;}
     IPasswordConfiguration PasswordConfig {get;}
     Fields MandatoryFields {get;}

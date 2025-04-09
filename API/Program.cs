@@ -22,7 +22,7 @@ builder.Services
         .AddLoginSessionTypes()
         .AddScoped<IApplicationConfiguration, ApplicationConfiguration>()
         .AddScoped<ISecureTokenGenerator, SecureTokenGenerator>()
-        .AddGraphQL()
+        .AddGraphQL(appConfig)
         .AddGraphQLErrorFilters()
         .AddGraphQLLoginTypes()
         .AddGraphQLLoginSessionTypes();

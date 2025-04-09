@@ -4,6 +4,8 @@ services:
     environment:
       MANDATORYFIELDS__USERNAME: true
       DATABASE__MONGO__URL: mongodb://root:root@mongo:27017
+      SUBSCRIPTIONPROVIDER__REDIS__HOST: redis
+      SUBSCRIPTIONPROVIDER__REDIS__PORT: 6379
     ports:
       - '5095:8080'
 
@@ -13,3 +15,8 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
+
+  redis:
+    image: redis/redis-stack-server:latest
+    ports:
+      - '3000:6379'

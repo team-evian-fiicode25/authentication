@@ -18,16 +18,19 @@ using Fiicode25Auth.API.Types.Value.Abstract;
 using Fiicode25Auth.Database.DBs;
 using Fiicode25Auth.Database.DBs.Abstract;
 using HotChocolate.Execution.Configuration;
+using StackExchange.Redis;
 
 public static class DIExtensionMethods
 {
-    public static IRequestExecutorBuilder AddGraphQL(this IServiceCollection services)
-        => services
-            .AddGraphQLServer()
-            .AddInMemorySubscriptions()
+    public static IRequestExecutorBuilder AddGraphQL(this IServiceCollection services, IApplicationConfiguration config)
+    {
+        var gql = services.AddGraphQLServer()
             .AddQueryType<Query>()
             .AddMutationType<Mutation>()
             .AddSubscriptionType<Subscription>();
+
+        return _addSubscriptionProvider(gql, config);
+    }
 
     public static IRequestExecutorBuilder AddGraphQLLoginTypes(this IRequestExecutorBuilder services)
         => services
@@ -127,6 +130,27 @@ public static class DIExtensionMethods
         {
             return services.AddSingleton<IDatabaseProvider>(provider =>
                     new MongoDatabaseProvider(mongoConfig.Url, mongoConfig.Database));
+        }
+
+        throw new Exception("Unknown database configuration");
+    }
+
+    private static IRequestExecutorBuilder _addSubscriptionProvider(IRequestExecutorBuilder builder, IApplicationConfiguration config)
+    {
+        var subscriptionConfig = config.SubscriptionProviderConfig;
+
+        if (subscriptionConfig is InMemorySubscriptionProviderConfiguration)
+        {
+            return builder.AddInMemorySubscriptions();
+        }
+
+        var redisConfig = subscriptionConfig as RedisSubscriptionProviderConfiguration;
+
+        if (redisConfig != null)
+        {
+            return builder
+                .AddRedisSubscriptions(
+                        (sp) => ConnectionMultiplexer.Connect($"{redisConfig.Host}:{redisConfig.Port}"));
         }
 
         throw new Exception("Unknown database configuration");
