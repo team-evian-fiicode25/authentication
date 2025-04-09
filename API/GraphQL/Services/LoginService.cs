@@ -72,11 +72,11 @@ public class LoginService : ILoginService
         return _qLoginProvider.FromDBO(dbo);
     }
 
-    public async Task<IQueryableLogin> RequestEmailVerification(string? id = null,
-                                                                string? username = null,
-                                                                string? email = null,
-                                                                string? phone = null,
-                                                                string? sessionToken = null)
+    public async Task<IEmailVerificationDTO> RequestEmailVerification(string? id = null,
+                                                                      string? username = null,
+                                                                      string? email = null,
+                                                                      string? phone = null,
+                                                                      string? sessionToken = null)
     {
         var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
 
@@ -92,17 +92,17 @@ public class LoginService : ILoginService
 
         dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
 
-        var qLogin = _qLoginProvider.FromDBO(dbo);
-        await _eventSender.SendAsync("EmailVerificationRequested", qLogin);
+        var dto = _loginProviders.EmailVerificationDTO.FromDBO(dbo);
+        await _eventSender.SendAsync("EmailVerificationRequested", dto);
 
-        return qLogin;
+        return dto;
     }
 
-    public async Task<IQueryableLogin> RequestPhoneNumberVerification(string? id = null,
-                                                                      string? username = null,
-                                                                      string? email = null,
-                                                                      string? phone = null,
-                                                                      string? sessionToken = null)
+    public async Task<IPhoneVerificationDTO> RequestPhoneNumberVerification(string? id = null,
+                                                                            string? username = null,
+                                                                            string? email = null,
+                                                                            string? phone = null,
+                                                                            string? sessionToken = null)
     {
         var dbo = await _loginRetriever.GetByIdentifier(id, username, phone, email, sessionToken);
 
@@ -118,10 +118,10 @@ public class LoginService : ILoginService
 
         dbo = await _dbProvider.Database.Logins.Commit(_loginProviders.Login.ToDBO(login));
 
-        var qLogin = _qLoginProvider.FromDBO(dbo);
-        await _eventSender.SendAsync("PhoneVerificationRequested", qLogin);
+        var dto = _loginProviders.PhoneVerificationDTO.FromDBO(dbo);
+        await _eventSender.SendAsync("PhoneVerificationRequested", dto);
 
-        return qLogin;
+        return dto;
     }
 
     public LoginService(IDatabaseProvider dbProvider,

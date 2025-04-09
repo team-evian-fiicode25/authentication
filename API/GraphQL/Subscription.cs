@@ -9,10 +9,10 @@ public class Subscription
         => login;
 
     [Subscribe]
-    public IQueryableLogin EmailVerificationRequested([EventMessage] IQueryableLogin login)
+    public IEmailVerificationDTO EmailVerificationRequested([EventMessage] IEmailVerificationDTO login)
         => login;
 
     [Subscribe]
-    public IQueryableLogin PhoneVerificationRequested([EventMessage] IQueryableLogin login)
+    public IPhoneVerificationDTO PhoneVerificationRequested([EventMessage] IPhoneVerificationDTO login)
         => login;
 }

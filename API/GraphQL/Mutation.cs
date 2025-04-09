@@ -29,19 +29,19 @@ public class Mutation
                                                           ILoginSessionService loginSessionService)
         => loginSessionService.LogInWithPassword(password, id, username, email, phone);
 
-    public Task<IQueryableLogin> RequestEmailVerification(string? id,
-                                                          string? username,
-                                                          string? email,
-                                                          string? phone,
-                                                          string? sessionToken,
-                                                          ILoginService loginService)
-        => loginService.RequestEmailVerification(id, username, email, phone, sessionToken);
-
-    public Task<IQueryableLogin> RequestPhoneNumberVerification(string? id,
+    public Task<IEmailVerificationDTO> RequestEmailVerification(string? id,
                                                                 string? username,
                                                                 string? email,
                                                                 string? phone,
                                                                 string? sessionToken,
                                                                 ILoginService loginService)
+        => loginService.RequestEmailVerification(id, username, email, phone, sessionToken);
+
+    public Task<IPhoneVerificationDTO> RequestPhoneNumberVerification(string? id,
+                                                                      string? username,
+                                                                      string? email,
+                                                                      string? phone,
+                                                                      string? sessionToken,
+                                                                      ILoginService loginService)
         => loginService.RequestPhoneNumberVerification(id, username, email, phone, sessionToken);
 }

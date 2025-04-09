@@ -4,6 +4,5 @@ public interface IQueryableEmail
 {
     string Address {get;}
     bool IsVerified {get;}
-    string? VerifyToken {get;}
 }
 

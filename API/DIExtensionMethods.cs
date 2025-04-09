@@ -33,7 +33,9 @@ public static class DIExtensionMethods
         => services
             .AddType<ObjectType<QueryableLogin>>()
             .AddType<ObjectType<QueryableEmail>>()
-            .AddType<ObjectType<QueryablePhoneNumber>>();
+            .AddType<ObjectType<QueryablePhoneNumber>>()
+            .AddType<ObjectType<EmailVerificationDTO>>()
+            .AddType<ObjectType<PhoneVerificationDTO>>();
 
     public static IRequestExecutorBuilder AddGraphQLLoginSessionTypes(this IRequestExecutorBuilder services)
         => services
@@ -57,6 +59,8 @@ public static class DIExtensionMethods
             .AddScoped<IEmailProvider, EmailProvider>()
             .AddScoped<IPhoneNumberProvider, PhoneNumberProvider>()
             .AddScoped<IQueryableLoginProvider, QueryableLoginProvider>()
+            .AddScoped<IEmailVerificationDTOProvider, EmailVerificationDTOProvider>()
+            .AddScoped<IPhoneVerificationDTOProvider, PhoneVerificationDTOProvider>()
             .AddScoped<AllLoginProviders>()
             .AddScoped<ILoginRetriever, LoginRetriever>()
             .AddScoped<ILoginService, LoginService>()
