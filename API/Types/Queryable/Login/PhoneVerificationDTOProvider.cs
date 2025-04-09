@@ -11,6 +11,7 @@ public class PhoneVerificationDTOProvider : IPhoneVerificationDTOProvider
 
         return new PhoneVerificationDTO()
         {
+            UserId = login.Id.ToString(),
             Username = login.UserName,
             PhoneNumber = login.PhoneNumber.Number,
             VerificationCode = login.PhoneNumber.VerifyCode,

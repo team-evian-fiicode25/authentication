@@ -11,6 +11,7 @@ public class EmailVerificationDTOProvider : IEmailVerificationDTOProvider
 
         return new EmailVerificationDTO()
         {
+            UserId = login.Id.ToString(),
             Username = login.UserName,
             Email = login.Email.Address,
             VerificationToken = login.Email.VerifyToken,
