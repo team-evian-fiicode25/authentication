@@ -22,13 +22,14 @@ builder.Services
         .AddLoginSessionTypes()
         .AddScoped<IApplicationConfiguration, ApplicationConfiguration>()
         .AddScoped<ISecureTokenGenerator, SecureTokenGenerator>()
-        .AddGraphQL()
+        .AddGraphQL(appConfig)
         .AddGraphQLErrorFilters()
         .AddGraphQLLoginTypes()
         .AddGraphQLLoginSessionTypes();
 
 var app = builder.Build();
 app.UseRouting()
+   .UseWebSockets()
    .UseEndpoints(e => e.MapGraphQL());
 
 await app.RunWithGraphQLCommandsAsync(args);

@@ -17,9 +17,32 @@ public class Email : IEmail
         }
     }
 
-    public bool IsVerified => VerifyToken == null;
+    public bool IsVerified {get; private set;}
 
     public string? VerifyToken {get; private set;}
+
+    public string RequestVerification()
+    {
+        if (IsVerified)
+            throw new GraphQLException("Cannot request verification for an already verified email");
+
+        return VerifyToken = _tokenGenerator.Base64Url128Bytes();
+    }
+
+    public void Verify()
+    {
+        IsVerified = true;
+        VerifyToken = null;
+    }
+
+    public bool VerifyIfMatches(string token)
+    {
+        if(token != VerifyToken)
+            return false;
+
+        Verify();
+        return true;
+    }
 
     private string _validateEmail(string email)
     {
@@ -32,14 +55,18 @@ public class Email : IEmail
     {
         _address="";
         Address=address;  
-        VerifyToken=tokenGenerator.Base64Url128Bytes();
+        IsVerified=false;
+        _tokenGenerator=tokenGenerator;
     }
 
-    public Email(string address, string? token)
+    public Email(string address, bool isVerified, string? token, ISecureTokenGenerator tokenGenerator)
     {
         _address="";
         Address=address;
+        IsVerified=isVerified;
         VerifyToken=token;
+        _tokenGenerator=tokenGenerator;
     }
 
+    private ISecureTokenGenerator _tokenGenerator;
 }

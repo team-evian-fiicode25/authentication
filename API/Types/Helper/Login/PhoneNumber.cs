@@ -10,19 +10,49 @@ public class PhoneNumber : IPhoneNumber
     
     public string Number => _phoneNumberValue.Value;
 
-    public bool IsVerified => VerifyCode == null;
+    public bool IsVerified {get; private set;}
     public string? VerifyCode {get; private set;}
+
+    public string RequestVerification()
+    {
+        if (IsVerified)
+        {
+            throw new GraphQLException("Cannot request verification of an already verified phone number.");
+        }
+
+        return VerifyCode=_tokenGenerator.RandomDigits6();
+    }
+
+    public void Verify()
+    {
+        IsVerified=true;
+        VerifyCode=null;
+    }
+
+    public bool VerifyIfMatches(string code)
+    {
+        if (VerifyCode != code)
+            return false;
+
+        Verify();
+        return true;
+    }
 
     public PhoneNumber(string phoneNumber, ISecureTokenGenerator tokenGenerator)
     {
         _phoneNumberValue=PhoneNumberValue.Create(phoneNumber);
-        VerifyCode=tokenGenerator.RandomDigits6();
+        _tokenGenerator=tokenGenerator;
+        IsVerified=false;
     }
 
-    public PhoneNumber(string phoneNumber, string? verifyCode)
+    public PhoneNumber(string phoneNumber, bool isVerified, string? verifyCode, ISecureTokenGenerator tokenGenerator)
     {
         _phoneNumberValue=PhoneNumberValue.Create(phoneNumber);
         VerifyCode=verifyCode;
+        IsVerified=isVerified;
+        _tokenGenerator=tokenGenerator;
     }
+
+    private ISecureTokenGenerator _tokenGenerator;
 }
 

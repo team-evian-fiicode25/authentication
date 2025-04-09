@@ -58,6 +58,30 @@ public class ApplicationConfiguration : IApplicationConfiguration
         }
     }
 
+    public ISubscriptionProviderConfiguration SubscriptionProviderConfig
+    {
+        get
+        {
+            var section = _config.GetSection("SubscriptionProvider");
+
+            if (section.GetSection("InMemory").Exists())
+                return new InMemorySubscriptionProviderConfiguration();
+
+            var redisSection = section.GetSection("Redis");
+            if (redisSection.Exists())
+            {
+                var redisConfiguration = redisSection.Get<RedisSubscriptionProviderConfiguration>();
+
+                if (redisConfiguration == null)
+                    throw new Exception("Invalid redis configuration");
+
+                return redisConfiguration;
+            }
+
+            return new InMemorySubscriptionProviderConfiguration();
+        }
+    }
+
     public IUsernameConfiguration UsernameConfig
     {
         get

@@ -9,12 +9,13 @@ public class EmailProvider : IEmailProvider
         => new Email(email, _tokenGenerator);
 
     public IEmail FromDBO(Database.DBObjects.Email email)
-        => new Email(email.Address, email.VerifyToken);
+        => new Email(email.Address, email.IsVerified, email.VerifyToken, _tokenGenerator);
 
     public Database.DBObjects.Email ToDBO(IEmail email) => new()
     {
         Address = email.Address,
-        VerifyToken = email.VerifyToken
+        VerifyToken = email.VerifyToken,
+        IsVerified = email.IsVerified
     };
 
     public EmailProvider(ISecureTokenGenerator tokenGenerator)

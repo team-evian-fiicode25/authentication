@@ -22,27 +22,16 @@ public class Email
 {
     public required string Address {get; set;}
 
-    /// <value>
-    ///     Token to be received in mail, 
-    ///     probably encoded in an URL
-    /// </value>
-    /// <remarks>
-    ///     A null value here signifies
-    ///     a verified email address
-    /// </remarks>
     public string? VerifyToken {get; set;}
+    public required bool IsVerified {get; set;}
 }
 
 public class PhoneNumber
 {
     public required string Number {get; set;}
 
-    /// <value>Verify code to be sent in SMS</value>
-    /// <remarks>
-    ///     A null value here signifies
-    ///     a verified phone number
-    /// </remarks>
     public string? VerifyCode {get; set;}
+    public required bool IsVerified {get; set;}
 }
 
 public class SessionToken
