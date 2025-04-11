@@ -71,3 +71,10 @@ Added a MongoDB implementation
 of the specified configuration
 - Reduce the minimum size of a bcrypt hashed password to 8
 characters
+
+# v0.8.0
+- Added subscriptions support with events for the following
+    - Login creation
+    - Email verification requests
+    - Phone verification requests
+- Added mutations to verify phone/email
