@@ -30,6 +30,7 @@ work.
 ## Root Properties Index
 - [MandatoryFields](#mandatoryfields)
 - [Database](#database)
+- [SubscriptionProvider](#subscriptionprovider)
 - [UsernameValidator](#usernamevalidator)
 - [Password](#password)
 
@@ -78,6 +79,34 @@ Specifies a MongoDB connection by its respective connection string.
 | Property | Type   | Description           |
 |----------|--------|-----------------------|
 | Url      | string | The connection string |
+
+### SubscriptionProvider
+While the default in-memory provider works fine, one might
+want to set up an external provider as such to scale this
+service horizontally independently of its subscribers, while
+ensuring that everybody gets every event.
+
+This must have exactly one child property, that being the
+configuration of the provider used to for publishing events.
+
+Unless this property is specified, the default in-memory
+provider will be used.
+
+| Property | Type                                                                                    | Description                                      |
+|----------|-----------------------------------------------------------------------------------------|--------------------------------------------------|
+| InMemory | [InMemorySubscriptionProviderConfiguration](#inmemorysubscriptionproviderconfiguration) | Subscription are managed on a per-instance basis |
+| Redis    | [RedisSubscriptionProviderConfiguration](#redissubscriptionproviderconfiguration)       | Redis provider                                   |
+
+#### InMemorySubscriptionProviderConfiguration
+This type has no child properties.
+
+#### RedisSubscriptionProviderConfiguration
+Specifies a MongoDB connection by its respective connection string.
+
+| Property | Type   | Description       |
+|----------|--------|-------------------|
+| Host     | string | The database host |
+| Port     | int    | The database port |
 
 ### UsernameValidator
 This must have exactly one child property, that being the
